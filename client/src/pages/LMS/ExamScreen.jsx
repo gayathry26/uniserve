@@ -40,6 +40,7 @@ const ExamScreen = ({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [redirectTimer, setRedirectTimer] = useState(3);
+  const [frozenExitTimer, setFrozenExitTimer] = useState(3);
   const [showInstructions, setShowInstructions] = useState(true); // Show on first load
   const [showPhaseConfirm, setShowPhaseConfirm] = useState(false);
   const [showTechPopup, setShowTechPopup] = useState(false);
@@ -88,6 +89,9 @@ const ExamScreen = ({
       setAttempt(null);
       setTimer(0);
       proctor.exitFullscreen();
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -155,10 +159,16 @@ const ExamScreen = ({
   // Auto-redirect after completion
   useEffect(() => {
     if (phase !== 'result') return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
     const id = setInterval(() => {
       setRedirectTimer(t => {
         if (t <= 1) {
           clearInterval(id);
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          }
           if (window.lockdownBrowser) window.lockdownBrowser.endExam();
           else if (onExit) onExit();
           else navigate('/assessment');
@@ -169,6 +179,29 @@ const ExamScreen = ({
     }, 1000);
     return () => clearInterval(id);
   }, [phase, navigate, onExit]);
+
+  // Auto-exit if exam is frozen / terminated due to strikes
+  useEffect(() => {
+    if (!proctor.frozen) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+    const id = setInterval(() => {
+      setFrozenExitTimer(t => {
+        if (t <= 1) {
+          clearInterval(id);
+          if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+          }
+          if (onExit) onExit();
+          else navigate('/assessment');
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [proctor.frozen, onExit, navigate]);
 
   // Auto-save every 30s
   useEffect(() => {
@@ -420,7 +453,7 @@ const ExamScreen = ({
             <h2 style={{ color: '#0f172a', fontWeight: 800, marginBottom: 8 }}>System Error</h2>
             <p style={{ color: '#ef5350', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: 24 }}>{error}</p>
             <button onClick={() => window.location.reload()} style={{ ...styles.doneBtn, background: '#1e293b', marginBottom: 12 }}>Retry Application</button>
-            <button onClick={() => navigate('/student/dashboard/overview')} style={styles.backBtn}>Back to Dashboard</button>
+            <button onClick={() => { if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); } if (onExit) onExit(); else navigate('/assessment'); }} style={styles.backBtn}>Back to Assessment Hub</button>
           </div>
         </div>
       );
@@ -434,8 +467,8 @@ const ExamScreen = ({
             <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: 24 }}>
               There are no active examinations assigned to your department at this time. Please check back later or contact your administrator.
             </p>
-            <button onClick={() => navigate('/student/dashboard/overview')} style={{ ...styles.doneBtn, background: '#1e293b' }}>
-              Back to Dashboard
+            <button onClick={() => { if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); } if (onExit) onExit(); else navigate('/assessment'); }} style={{ ...styles.doneBtn, background: '#1e293b' }}>
+              Back to Assessment Hub
             </button>
           </div>
         </div>
@@ -449,7 +482,7 @@ const ExamScreen = ({
           totalQuestions={(activeTest?.question_count || 40) + (activeTest?.tech_question_count || 0)}
           duration={activeTest?.duration_minutes || 90}
           onStartExam={handleStartExamClick}
-          onGoBack={() => navigate('/student/dashboard/overview')}
+          onGoBack={() => { if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); } if (onExit) onExit(); else navigate('/assessment'); }}
         />
       </>
     );
@@ -470,7 +503,7 @@ const ExamScreen = ({
             </p>
             <div style={{ marginTop: 20, padding: '10px 20px', background: '#f1f5f9', borderRadius: 12, display: 'inline-block' }}>
               <p style={{ color: '#64748b', fontSize: '0.85rem', fontWeight: 700 }}>
-                Redirecting to dashboard in <span style={{ color: '#1e293b' }}>{redirectTimer}s</span>...
+                Redirecting to Assessment Hub in <span style={{ color: '#1e293b' }}>{redirectTimer}s</span>...
               </p>
             </div>
           </div>
@@ -492,8 +525,8 @@ const ExamScreen = ({
               Exit Secure Browser
             </button>
           ) : (
-            <button onClick={() => navigate('/student/dashboard/overview')} style={styles.doneBtn}>
-              Return to Dashboard
+            <button onClick={() => { if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); } if (onExit) onExit(); else navigate('/assessment'); }} style={styles.doneBtn}>
+              Return to Assessment Hub
             </button>
           )}
         </div>
@@ -510,7 +543,7 @@ const ExamScreen = ({
           <h2 style={{ color: '#0f172a', fontWeight: 800, marginBottom: 8 }}>An Error Occurred</h2>
           <p style={{ color: '#ef5350', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: 24 }}>{error}</p>
           <button onClick={() => setError('')} style={{ ...styles.doneBtn, background: '#1e293b', marginBottom: 12 }}>Dismiss & Continue</button>
-          <button onClick={() => navigate('/student/dashboard/overview')} style={styles.backBtn}>Exit to Dashboard</button>
+          <button onClick={() => { if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); } if (onExit) onExit(); else navigate('/assessment'); }} style={styles.backBtn}>Exit to Assessment Hub</button>
         </div>
       </div>
     );
@@ -700,9 +733,32 @@ const ExamScreen = ({
           <p style={{ color: '#e2e8f0', fontSize: '1rem', maxWidth: 460, lineHeight: 1.6, marginBottom: 20 }}>
             Maximum allowed proctoring violations reached ({proctor.violations}/{proctor.maxViolations} Strikes).<br />Your session has been locked and automatically submitted for administrative review.
           </p>
-          <div style={{ padding: '10px 24px', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: 12, color: '#fca5a5', fontSize: '0.85rem', fontWeight: 700 }}>
-            Transmitting assessment record to administrator...
+          <div style={{ padding: '10px 24px', background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: 12, color: '#fca5a5', fontSize: '0.85rem', fontWeight: 700, marginBottom: 16 }}>
+            Automatically exiting to Assessment Portal in {frozenExitTimer}s...
           </div>
+          <button
+            onClick={() => {
+              if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+              }
+              if (onExit) onExit();
+              else navigate('/assessment');
+            }}
+            style={{
+              padding: '12px 28px',
+              background: '#ef4444',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 12,
+              fontWeight: 700,
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(239, 68, 68, 0.4)',
+              transition: 'all 0.2s'
+            }}
+          >
+            Exit to Assessment Now
+          </button>
         </div>
       )}
 

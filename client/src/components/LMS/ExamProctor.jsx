@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 
-const MAX_VIOLATIONS = 5;
+const MAX_VIOLATIONS = 3;
 const INACTIVITY_WARN_TIMEOUT = 75000; // 75s warning notice
 const INACTIVITY_TIMEOUT = 120000; // 2 minutes strike
 const FOCUS_COOLDOWN_MS = 2500; // Debounce window between visibility and blur
