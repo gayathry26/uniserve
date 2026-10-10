@@ -88,6 +88,13 @@ router.get('/assessment/:id', authenticateToken, assessCtrl.getAssessmentById);
 router.post('/assessment/submit', authenticateToken, assessCtrl.submitCodeSolution);
 router.get('/assessment/:id/leaderboard', authenticateToken, assessCtrl.getAssessmentLeaderboard);
 
+// 9b. Online Quiz & CodeSprint Examination Routes
+router.get('/student/quiz/subjects', assessCtrl.getQuizSubjects);
+router.post('/student/quiz/attempts/start', assessCtrl.startQuizAttempt);
+router.post('/student/quiz/attempts/save', assessCtrl.saveQuizAttempt);
+router.post('/student/quiz/attempts/submit', assessCtrl.submitQuizAttempt);
+router.post('/student/quiz/attempts/proctor-log', assessCtrl.saveProctorLog);
+
 // 10. Training Programs & Department Attendance
 router.get('/training', authenticateToken, trainCtrl.getAllTrainings);
 router.post('/training', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN']), trainCtrl.createTraining);

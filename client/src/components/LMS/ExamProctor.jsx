@@ -81,6 +81,7 @@ export const useProctor = ({ onAutoSubmit, enabled = true, initialFullscreen = f
   const streamRef = useRef(null);
   const broadcastChannelRef = useRef(null);
   const navCountRef = useRef({ count: 0, firstTime: 0 });
+  const isExitingRef = useRef(false);
 
   // ── AUDIT EVENT LOGGING ──
   const logEvent = useCallback((type, detail) => {
@@ -177,6 +178,9 @@ export const useProctor = ({ onAutoSubmit, enabled = true, initialFullscreen = f
   }, [logEvent]);
 
   const exitFullscreen = useCallback(() => {
+    isExitingRef.current = true;
+    hasEnteredFsRef.current = false;
+    setFullscreenLost(false);
     try {
       const efs = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
       if (efs && checkIsFullscreen()) {
@@ -184,6 +188,11 @@ export const useProctor = ({ onAutoSubmit, enabled = true, initialFullscreen = f
       }
     } catch (e) {}
     setIsFullscreen(false);
+    if (streamRef.current) {
+      try {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      } catch (e) {}
+    }
   }, []);
 
   const forceFullscreen = useCallback(async () => {
@@ -207,6 +216,11 @@ export const useProctor = ({ onAutoSubmit, enabled = true, initialFullscreen = f
     if (!enabled) return;
 
     const handleFsChange = () => {
+      if (isExitingRef.current) {
+        setIsFullscreen(false);
+        setFullscreenLost(false);
+        return;
+      }
       const isFs = checkIsFullscreen();
       setIsFullscreen(isFs);
 
@@ -218,8 +232,8 @@ export const useProctor = ({ onAutoSubmit, enabled = true, initialFullscreen = f
             lastFsLossRef.current = now;
             addViolation('Exited mandatory fullscreen mode', 'high');
           }
+          setFullscreenLost(true);
         }
-        setFullscreenLost(true);
       } else {
         hasEnteredFsRef.current = true;
         setFullscreenLost(false);
@@ -244,6 +258,7 @@ export const useProctor = ({ onAutoSubmit, enabled = true, initialFullscreen = f
     if (!enabled) return;
 
     const handleFocusLoss = (reason) => {
+      if (isExitingRef.current) return;
       const now = Date.now();
       // Cooldown of 2.5s prevents double-counting visibilitychange + blur
       if (now - lastFocusLossRef.current < FOCUS_COOLDOWN_MS) {
@@ -331,6 +346,7 @@ export const useProctor = ({ onAutoSubmit, enabled = true, initialFullscreen = f
     if (!enabled) return;
 
     const blockMaliciousKeys = (e) => {
+      if (isExitingRef.current) return;
       const key = (e.key || '').toLowerCase();
       const isCtrl = e.ctrlKey || e.metaKey;
       const isShift = e.shiftKey;

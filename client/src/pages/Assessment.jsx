@@ -214,16 +214,6 @@ if __name__ == '__main__':
   if (viewMode === 'exam') {
     return (
       <div className="fixed inset-0 z-[1000] w-screen h-screen bg-slate-50 overflow-y-auto">
-        <div className="fixed top-4 left-4 z-[1010]">
-          <button
-            onClick={handleExitExam}
-            className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 text-white text-xs font-bold border border-slate-700 shadow-xl hover:bg-rose-700 transition-colors flex items-center gap-1.5 cursor-pointer backdrop-blur-md"
-            title="Exit Exam to Hub"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Exit Exam</span>
-          </button>
-        </div>
         <ExamScreen
           autoStart={true}
           initialPhase="exam"

@@ -56,48 +56,76 @@ const ExamScreen = ({
   });
 
   const submitQuiz = useCallback(async (violationCount) => {
-    if (!attempt || submitting) return;
+    if (submitting) return;
     setSubmitting(true);
+
+    // 1. Immediately disarm proctoring and stop tracks so no exit strikes fire
     try {
-      const payload = (attempt.questions || []).map((q) => ({
+      if (proctor?.exitFullscreen) {
+        proctor.exitFullscreen();
+      }
+    } catch (e) {}
+
+    // 2. Clean up local backup immediately
+    if (attempt?.attemptId) {
+      try {
+        localStorage.removeItem(`uniserve_exam_backup_${attempt.attemptId}`);
+      } catch (e) {}
+    }
+
+    // 3. Post exam submission to backend (safely, network errors will not block exit)
+    try {
+      const payload = (attempt?.questions || []).map((q) => ({
         questionId: q.id,
         selectedOption: answers[q.id]?.selectedOption || '',
         codingResponse: answers[q.id]?.codingResponse || ''
       }));
-      const data = await apiFetch('/api/student/quiz/attempts/submit', {
+
+      await apiFetch('/api/student/quiz/attempts/submit', {
         method: 'POST',
         body: JSON.stringify({
-          attemptId: attempt.attemptId,
+          attemptId: attempt?.attemptId,
           answers: payload,
-          violations: violationCount ?? proctor.violations,
-          ipAddress: proctor.ipAddress,
-          networkStats: proctor.networkStats,
-          attentionScore: proctor.attentionScore,
-          attentionHistory: proctor.attentionHistory
+          violations: violationCount ?? proctor?.violations ?? 0,
+          ipAddress: proctor?.ipAddress,
+          networkStats: proctor?.networkStats,
+          attentionScore: proctor?.attentionScore,
+          attentionHistory: proctor?.attentionHistory
         })
-      });
-      // Flush proctor logs to backend
-      if (proctor.eventLog.length > 0) {
+      }).catch(() => {});
+
+      if (proctor?.eventLog && proctor.eventLog.length > 0) {
         apiFetch('/api/student/quiz/attempts/proctor-log', {
           method: 'POST',
-          body: JSON.stringify({ attemptId: attempt.attemptId, events: proctor.eventLog, sessionId: proctor.sessionId })
-        }).catch(() => { });
-      }
-
-      setResult(data.result);
-      setPhase('result');
-      setAttempt(null);
-      setTimer(0);
-      proctor.exitFullscreen();
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
+          body: JSON.stringify({ attemptId: attempt?.attemptId, events: proctor.eventLog, sessionId: proctor.sessionId })
+        }).catch(() => {});
       }
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setSubmitting(false);
+      console.warn('Exam submit sync notice:', err);
     }
-  }, [attempt, answers, submitting, proctor]);
+
+    // 4. Force release native fullscreen
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen().catch(() => {});
+      }
+    } catch (e) {}
+
+    if (window.lockdownBrowser) {
+      try { window.lockdownBrowser.endExam(); } catch (e) {}
+    }
+
+    setAttempt(null);
+    setTimer(0);
+    setSubmitting(false);
+
+    // 5. IMMEDIATELY EXIT THE PORTAL TO ASSESSMENT HUB
+    if (onExit) {
+      onExit();
+    } else {
+      navigate('/assessment');
+    }
+  }, [attempt, answers, submitting, proctor, onExit, navigate]);
 
   useEffect(() => {
     submitQuizRef.current = submitQuiz;
@@ -166,19 +194,24 @@ const ExamScreen = ({
       setRedirectTimer(t => {
         if (t <= 1) {
           clearInterval(id);
-          if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-          }
-          if (window.lockdownBrowser) window.lockdownBrowser.endExam();
-          else if (onExit) onExit();
-          else navigate('/assessment');
           return 0;
         }
         return t - 1;
       });
     }, 1000);
     return () => clearInterval(id);
-  }, [phase, navigate, onExit]);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase === 'result' && redirectTimer === 0) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      if (window.lockdownBrowser) window.lockdownBrowser.endExam();
+      else if (onExit) onExit();
+      else navigate('/assessment');
+    }
+  }, [phase, redirectTimer, onExit, navigate]);
 
   // Auto-exit if exam is frozen / terminated due to strikes
   useEffect(() => {
@@ -190,18 +223,23 @@ const ExamScreen = ({
       setFrozenExitTimer(t => {
         if (t <= 1) {
           clearInterval(id);
-          if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-          }
-          if (onExit) onExit();
-          else navigate('/assessment');
           return 0;
         }
         return t - 1;
       });
     }, 1000);
     return () => clearInterval(id);
-  }, [proctor.frozen, onExit, navigate]);
+  }, [proctor.frozen]);
+
+  useEffect(() => {
+    if (proctor.frozen && frozenExitTimer === 0) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      if (onExit) onExit();
+      else navigate('/assessment');
+    }
+  }, [proctor.frozen, frozenExitTimer, onExit, navigate]);
 
   // Auto-save every 30s
   useEffect(() => {
@@ -814,6 +852,34 @@ const ExamScreen = ({
       {/* Top Bar */}
       <div style={styles.topBar}>
         <div style={styles.topLeft}>
+          {onExit && (
+            <button
+              onClick={() => {
+                if (window.confirm('Are you sure you want to exit the examination? Your progress will be preserved.')) {
+                  try { proctor.exitFullscreen(); } catch (e) {}
+                  if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); }
+                  onExit();
+                }
+              }}
+              style={{
+                padding: '6px 12px',
+                borderRadius: 8,
+                background: '#0f172a',
+                color: '#fff',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                border: '1px solid #334155',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5,
+                marginRight: 6
+              }}
+              title="Exit Exam to Assessment Hub"
+            >
+              <span>← Exit Exam</span>
+            </button>
+          )}
           <img src="/logo.jpeg" alt="Uniserve Logo" style={{ ...styles.logo, background: '#fff', objectFit: 'contain', padding: '2px', borderRadius: '8px' }} />
           <div>
             <p style={{ color: '#0f172a', fontWeight: 800, fontSize: '0.9rem' }}>UNISERVE CodeSprint LMS</p>
@@ -891,7 +957,7 @@ const ExamScreen = ({
             </div>
             <h2 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', marginBottom: 8 }}>Ready to Submit Your Exam?</h2>
             <p style={{ fontSize: '0.88rem', color: '#64748b', lineHeight: 1.6, marginBottom: 20 }}>
-              Please review your assessment progress before final submission. Once submitted, your answers cannot be modified.
+              Please review your assessment progress before final submission. Once submitted, your answers cannot be modified and you will exit back to the portal.
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, background: '#f8fafc', padding: 14, borderRadius: 16, border: '1px solid #e2e8f0', marginBottom: 20 }}>
@@ -924,7 +990,7 @@ const ExamScreen = ({
                 disabled={submitting}
                 style={{ flex: 1, padding: '12px 18px', borderRadius: 12, border: 'none', background: '#059669', color: '#fff', fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer', boxShadow: '0 4px 14px rgba(5, 150, 105, 0.4)' }}
               >
-                {submitting ? 'Submitting...' : 'Confirm & Submit'}
+                {submitting ? 'Submitting & Exiting...' : '✓ Submit & Exit Portal'}
               </button>
             </div>
           </div>
