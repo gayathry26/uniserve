@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --theme-primary: #2563eb;
+    --theme-primary-hover: #1d4ed8;
+    --theme-primary-light: #eff6ff;
+    --theme-primary-text: #1d4ed8;
+    --theme-primary-border: #bfdbfe;
+    --theme-gradient-from: #1e40af;
+    --theme-gradient-to: #4338ca;
+    --theme-accent: #38bdf8;
+    --theme-glow: rgba(37, 99, 235, 0.35);
+
+    --primary: var(--theme-primary);
+    --primary-light: var(--theme-accent);
+    --secondary: #0f172a;
+    --accent: var(--theme-accent);
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased font-sans;
+    margin: 0;
+    min-height: 100vh;
+  }
+}
+
+/* Dynamic Theme Utilities */
+.theme-bg-primary {
+  background-color: var(--theme-primary) !important;
+}
+
+.theme-bg-primary-hover:hover {
+  background-color: var(--theme-primary-hover) !important;
+}
+
+.theme-text-primary {
+  color: var(--theme-primary) !important;
+}
+
+.theme-border-primary {
+  border-color: var(--theme-primary) !important;
+}
+
+.theme-gradient-bg {
+  background: linear-gradient(135deg, var(--theme-gradient-from), var(--theme-gradient-to)) !important;
+}
+
+.theme-glow-shadow {
+  box-shadow: 0 10px 25px -5px var(--theme-glow) !important;
+}
+
+/* Custom Scrollbar for Dense Tables and Code */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

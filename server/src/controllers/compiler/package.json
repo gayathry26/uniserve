@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "axios": "^1.12.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "java": "^0.16.2",
+    "java-parser": "^3.0.1",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
+    "puppeteer": "^24.31.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "uuid": "^11.1.0",
+    "which": "^5.0.0",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@types/pixelmatch": "^5.2.6"
+  }
+}
