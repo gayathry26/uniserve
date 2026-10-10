@@ -137,7 +137,9 @@ router.get('/admin/department-databases', authenticateToken, authorize(['ADMIN',
 router.put('/admin/department-databases/:id', authenticateToken, authorize(['ADMIN']), adminCtrl.updateDepartmentDatabase);
 router.get('/admin/audit-logs', authenticateToken, authorize(['ADMIN', 'MANAGEMENT']), adminCtrl.getAuditLogs);
 
-// 20. AI Assistance
+// 20. AI Assistance (Powered by Mistral 7B Instruct GGUF & Live Database RAG)
+router.get('/ai/status', authenticateToken, aiCtrl.getAiStatus);
+router.post('/ai/ask', authenticateToken, aiCtrl.askDbAssistant);
 router.post('/ai/parse-resume', authenticateToken, aiCtrl.parseResume);
 router.post('/ai/match-job', authenticateToken, aiCtrl.matchJob);
 router.post('/ai/interview-feedback', authenticateToken, aiCtrl.evaluateInterviewAnswer);

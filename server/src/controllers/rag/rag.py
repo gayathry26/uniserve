@@ -9,8 +9,8 @@ from llama_cpp import Llama
 
 # Configuration
 CHROMA_DB_PATH = r'./chromadb'  # Relative path for Node.js compatibility
-EMBEDDING_MODEL_PATH = r'D:\amypo\aimodels\aimodels\backend\models\minillm'
-LLM_MODEL_PATH = r'D:\amypo\aimodels\aimodels\backend\models\LLM.gguf'
+EMBEDDING_MODEL_PATH = r'all-MiniLM-L6-v2'
+LLM_MODEL_PATH = r'D:\INNOVO\server\src\models\mistral-7b-instruct-v0.1.Q4_K_M.gguf'
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
