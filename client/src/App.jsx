@@ -138,14 +138,14 @@ function SuperAdminRoute() {
 function AdminRoute() {
   const { user, loading } = useAuth();
   if (loading) {
-    return <UniserveLoader title="UNISERVE" subtitle="Institutional Administration" status="Verifying security permissions..." />;
+    return <UniserveLoader title="UNISERVE" subtitle="Super Administrator Console" status="Verifying security permissions..." />;
   }
   if (!user) {
-    return <Login portal="admin" />;
+    return <Login portal="superadmin" />;
   }
   return (
     <Layout>
-      <Admin />
+      {user.roleName === 'SUPER_ADMIN' ? <Admin /> : <Navigate to="/" replace />}
     </Layout>
   );
 }

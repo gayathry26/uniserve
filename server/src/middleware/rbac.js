@@ -11,6 +11,11 @@ function authorize(allowedRoles = []) {
       });
     }
 
+    // SUPER_ADMIN has master unrestricted access to all endpoints
+    if (req.user.role_name === 'SUPER_ADMIN') {
+      return next();
+    }
+
     if (allowedRoles.length > 0 && !allowedRoles.includes(req.user.role_name)) {
       return res.status(403).json({
         success: false,

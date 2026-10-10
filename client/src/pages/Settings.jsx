@@ -33,6 +33,7 @@ export function Settings() {
     allPages,
     userRoles,
     rolePermissions,
+    backendSynced,
     togglePermission,
     setAllPermissionsForRole,
     resetToDefaults,
@@ -113,6 +114,12 @@ export function Settings() {
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200 animate-fade-in">
                   <Check className="w-3 h-3" />
                   Live Sync Active!
+                </span>
+              )}
+              {backendSynced && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200">
+                  <Database className="w-3 h-3" />
+                  MySQL Backend Connected
                 </span>
               )}
             </div>

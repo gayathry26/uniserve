@@ -23,7 +23,6 @@ export function Navbar() {
 
   const portals = [
     { role: 'SUPER_ADMIN', label: 'Master Super Administrator (All Pages)', icon: ShieldCheck, color: 'text-amber-500' },
-    { role: 'ADMIN', label: 'System Administrator Portal', icon: ShieldCheck, color: 'text-slate-700' },
     { role: 'TPO_OFFICER', label: 'Placement Officer / TPO Portal', icon: Award, color: 'text-amber-600' },
     { role: 'STUDENT', label: 'Student Portal (Aditya - CSE)', icon: GraduationCap, color: 'text-blue-600' },
     { role: 'FACULTY_COORDINATOR', label: 'Dept Coordinator (Prof. Suresh - CSE)', icon: BookOpen, color: 'text-emerald-600' },

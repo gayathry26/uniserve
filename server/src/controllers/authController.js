@@ -136,7 +136,6 @@ async function quickSwitchDemoRole(req, res, next) {
       FACULTY_COORDINATOR: 'hod.cse@college.edu',
       MANAGEMENT: 'principal@college.edu',
       ALUMNI: 'alumni.alex@example.com',
-      ADMIN: 'admin@college.edu',
     };
 
     const targetEmail = demoAccounts[targetRole];

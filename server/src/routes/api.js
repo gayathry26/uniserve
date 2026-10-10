@@ -27,11 +27,18 @@ const finCtrl = require('../controllers/financeController');
 const reportCtrl = require('../controllers/reportController');
 const adminCtrl = require('../controllers/adminController');
 const aiCtrl = require('../controllers/aiController');
+const rolePermCtrl = require('../controllers/rolePermissionController');
 
 // 1. Authentication & Role Switcher
 router.post('/auth/login', authCtrl.login);
 router.get('/auth/me', authenticateToken, authCtrl.getCurrentUser);
 router.post('/auth/switch-role', authCtrl.quickSwitchDemoRole);
+
+// 1b. Role Permissions & Dynamic Page Governance (Backend Persistence)
+router.get('/permissions', rolePermCtrl.getRolePermissions);
+router.get('/permissions/me', authenticateToken, rolePermCtrl.getCurrentUserPermissions);
+router.put('/permissions', authenticateToken, authorize(['SUPER_ADMIN']), rolePermCtrl.updateRolePermissions);
+router.post('/permissions/reset', authenticateToken, authorize(['SUPER_ADMIN']), rolePermCtrl.resetRolePermissions);
 
 // 2. Dashboards (Live Metrics)
 router.get('/dashboard/metrics', authenticateToken, dashCtrl.getDashboardMetrics);

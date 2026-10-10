@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import apiClient from '../api/client';
 
 // All pages/routes available in Uniserve
 export const ALL_PAGES = [
@@ -26,8 +27,7 @@ export const ALL_PAGES = [
 ];
 
 export const USER_ROLES = [
-  { id: 'SUPER_ADMIN', label: 'Super Admin', desc: 'Absolute root administrator with access to all pages' },
-  { id: 'ADMIN', label: 'System Admin', desc: 'Institutional system & security administrator' },
+  { id: 'SUPER_ADMIN', label: 'Super Admin', desc: 'Absolute root administrator with unrestricted access to all modules' },
   { id: 'TPO_OFFICER', label: 'Placement Officer (TPO)', desc: 'Placement cell director managing corporate drives' },
   { id: 'STUDENT', label: 'Student', desc: 'Enrolled university candidate participating in recruitment' },
   { id: 'FACULTY_COORDINATOR', label: 'Staff / Faculty', desc: 'Department academic placement coordinator' },
@@ -38,28 +38,6 @@ export const USER_ROLES = [
 
 const DEFAULT_ROLE_PERMISSIONS = {
   SUPER_ADMIN: ALL_PAGES.map((p) => p.path),
-  ADMIN: [
-    '/',
-    '/students',
-    '/companies',
-    '/jobs',
-    '/drives',
-    '/applications',
-    '/assessment',
-    '/interviews',
-    '/videocall/interview',
-    '/training',
-    '/internships',
-    '/offers',
-    '/policies',
-    '/reports',
-    '/finance',
-    '/alumni',
-    '/grievances',
-    '/ai-assistant',
-    '/admin',
-    '/settings',
-  ],
   TPO_OFFICER: [
     '/',
     '/students',
@@ -79,7 +57,6 @@ const DEFAULT_ROLE_PERMISSIONS = {
     '/alumni',
     '/grievances',
     '/ai-assistant',
-    '/admin',
     '/settings',
   ],
   STUDENT: [
@@ -127,6 +104,7 @@ const DEFAULT_ROLE_PERMISSIONS = {
     '/applications',
     '/assessment',
     '/interviews',
+    '/videocall/interview',
     '/offers',
     '/policies',
     '/settings',
@@ -142,7 +120,6 @@ const DEFAULT_ROLE_PERMISSIONS = {
     '/reports',
     '/finance',
     '/grievances',
-    '/admin',
     '/settings',
   ],
   ALUMNI: [
@@ -163,28 +140,48 @@ export function PermissionProvider({ children }) {
       const saved = localStorage.getItem('uniserve_role_permissions');
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Ensure SUPER_ADMIN always has all pages
         parsed.SUPER_ADMIN = ALL_PAGES.map((p) => p.path);
+        delete parsed.ADMIN; // Ensure legacy ADMIN is removed
         return parsed;
       }
     } catch (e) {
-      console.warn('Error loading role permissions from localStorage', e);
+      console.warn('Error loading role permissions from cache', e);
     }
     return DEFAULT_ROLE_PERMISSIONS;
   });
 
-  useEffect(() => {
+  const [backendSynced, setBackendSynced] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch live role permissions from MySQL backend on startup
+  const fetchBackendPermissions = useCallback(async () => {
     try {
-      localStorage.setItem('uniserve_role_permissions', JSON.stringify(rolePermissions));
-    } catch (e) {
-      console.warn('Error saving role permissions', e);
+      const res = await apiClient.get('/permissions');
+      if (res.data?.success && res.data?.permissions) {
+        const perms = res.data.permissions;
+        perms.SUPER_ADMIN = ALL_PAGES.map((p) => p.path);
+        delete perms.ADMIN;
+        setRolePermissionsState(perms);
+        setBackendSynced(true);
+        try {
+          localStorage.setItem('uniserve_role_permissions', JSON.stringify(perms));
+        } catch (e) {}
+      }
+    } catch (err) {
+      console.warn('Using cached permissions while connecting to backend:', err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [rolePermissions]);
+  }, []);
+
+  useEffect(() => {
+    fetchBackendPermissions();
+  }, [fetchBackendPermissions]);
 
   // Check if a role has access to a specific path
-  const canAccessPage = (roleName, pagePath) => {
+  const canAccessPage = useCallback((roleName, pagePath) => {
     if (!roleName) return false;
-    // Super admin ALWAYS has access to all pages
+    // Super admin ALWAYS has unrestricted access to all pages!
     if (roleName === 'SUPER_ADMIN') return true;
 
     const allowed = rolePermissions[roleName] || [];
@@ -199,13 +196,12 @@ export function PermissionProvider({ children }) {
     }
 
     return false;
-  };
+  }, [rolePermissions]);
 
-  // Toggle page permission for a given role
-  const togglePermission = (roleId, pagePath) => {
+  // Toggle page permission for a given role (persists to MySQL backend)
+  const togglePermission = async (roleId, pagePath) => {
     if (roleId === 'SUPER_ADMIN') {
-      // Super admin is locked to all pages
-      return;
+      return; // Super admin is locked to all pages
     }
 
     setRolePermissionsState((prev) => {
@@ -215,25 +211,74 @@ export function PermissionProvider({ children }) {
         ? currentList.filter((p) => p !== pagePath)
         : [...currentList, pagePath];
 
-      return {
+      const next = {
         ...prev,
         [roleId]: updatedList,
       };
+
+      try {
+        localStorage.setItem('uniserve_role_permissions', JSON.stringify(next));
+      } catch (e) {}
+
+      // Persist to MySQL Backend asynchronously
+      apiClient.put('/permissions', {
+        roleName: roleId,
+        allowedPages: updatedList,
+      }).then(() => {
+        setBackendSynced(true);
+      }).catch((err) => {
+        console.error('Failed to sync permission update to backend MySQL:', err);
+      });
+
+      return next;
     });
   };
 
-  // Set all permissions for a role
-  const setAllPermissionsForRole = (roleId, enableAll) => {
+  // Set all permissions for a role (persists to MySQL backend)
+  const setAllPermissionsForRole = async (roleId, enableAll) => {
     if (roleId === 'SUPER_ADMIN') return;
 
-    setRolePermissionsState((prev) => ({
-      ...prev,
-      [roleId]: enableAll ? ALL_PAGES.map((p) => p.path) : [],
-    }));
+    const newList = enableAll ? ALL_PAGES.map((p) => p.path) : [];
+
+    setRolePermissionsState((prev) => {
+      const next = {
+        ...prev,
+        [roleId]: newList,
+      };
+
+      try {
+        localStorage.setItem('uniserve_role_permissions', JSON.stringify(next));
+      } catch (e) {}
+
+      apiClient.put('/permissions', {
+        roleName: roleId,
+        allowedPages: newList,
+      }).then(() => {
+        setBackendSynced(true);
+      }).catch((err) => {
+        console.error('Failed to sync bulk permissions to backend MySQL:', err);
+      });
+
+      return next;
+    });
   };
 
-  // Reset to system defaults
-  const resetToDefaults = () => {
+  // Reset to system defaults in MySQL backend
+  const resetToDefaults = async () => {
+    try {
+      const res = await apiClient.post('/permissions/reset');
+      if (res.data?.success && res.data?.permissions) {
+        const perms = res.data.permissions;
+        perms.SUPER_ADMIN = ALL_PAGES.map((p) => p.path);
+        delete perms.ADMIN;
+        setRolePermissionsState(perms);
+        localStorage.setItem('uniserve_role_permissions', JSON.stringify(perms));
+        setBackendSynced(true);
+        return;
+      }
+    } catch (err) {
+      console.warn('Backend reset failed, using default local reset:', err);
+    }
     setRolePermissionsState(DEFAULT_ROLE_PERMISSIONS);
   };
 
@@ -243,10 +288,13 @@ export function PermissionProvider({ children }) {
         allPages: ALL_PAGES,
         userRoles: USER_ROLES,
         rolePermissions,
+        backendSynced,
+        loading,
         canAccessPage,
         togglePermission,
         setAllPermissionsForRole,
         resetToDefaults,
+        refreshPermissions: fetchBackendPermissions,
       }}
     >
       {children}

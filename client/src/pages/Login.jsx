@@ -30,8 +30,7 @@ export function Login({ portal = 'student' }) {
   const currentPortal = (() => {
     if (portal) return portal;
     const path = location.pathname.toLowerCase();
-    if (path.includes('/superadmin')) return 'superadmin';
-    if (path.includes('/admin')) return 'admin';
+    if (path.includes('/superadmin') || path.includes('/admin')) return 'superadmin';
     if (path.includes('/placement')) return 'placement';
     if (path.includes('/staff')) return 'staff';
     return 'student';
@@ -193,45 +192,6 @@ export function Login({ portal = 'student' }) {
         { label: 'Batch Placed', value: '88.5%' },
         { label: 'Active Interns', value: '115' },
         { label: 'Dept Rank', value: '#1 CSE' },
-      ],
-    },
-    admin: {
-      key: 'admin',
-      title: 'System Administrator Portal',
-      badge: 'Institutional System Admin',
-      tagline: 'Multi-database infrastructure, RBAC security, and compiler services.',
-      description:
-        'Master administrative control room managing multi-tenant database isolation, user registry, security audit logs, and microservice compilers.',
-      defaultUsername: 'admin@college.edu',
-      defaultPassword: 'Password@123',
-      redirectPath: '/admin',
-      features: [
-        {
-          title: 'Multi-DB Architecture',
-          desc: 'Manage dedicated department MySQL instances with common registry sync.',
-          icon: Database,
-        },
-        {
-          title: 'Role-Based Access (RBAC)',
-          desc: 'Granular permissions covering Students, TPOs, Recruiters, and Faculty.',
-          icon: ShieldCheck,
-        },
-        {
-          title: 'Tamper-Proof Audit Logs',
-          desc: 'Cryptographic trace of logins, grade modifications, and offer rollouts.',
-          icon: CheckCircle2,
-        },
-        {
-          title: 'Assessment Compilers',
-          desc: 'Real-time execution sandbox monitors for C, C++, Java, and Python microservices.',
-          icon: Sparkles,
-        },
-      ],
-      stats: [
-        { label: 'Synced DBs', value: '7 Active' },
-        { label: 'System Uptime', value: '99.98%' },
-        { label: 'Total Users', value: '14.5K' },
-        { label: 'Security Grade', value: 'Tier 3' },
       ],
     },
   };
