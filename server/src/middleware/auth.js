@@ -22,8 +22,10 @@ async function authenticateToken(req, res, next) {
     
     // Fetch live user to ensure active status
     const users = await queryCommon(
-      `SELECT u.id, u.uuid, u.email, u.role_id, u.role_name, u.first_name, u.last_name, u.department_code, u.status,
-              sm.id AS student_id, sm.register_number
+      `SELECT u.id, u.uuid, u.email, u.role_id, u.role_name, u.first_name, u.last_name, 
+              COALESCE(sm.department_code, u.department_code) AS department_code, u.status,
+              sm.id AS student_id, sm.register_number, sm.cgpa, sm.placement_status,
+              sm.batch, sm.graduation_year, COALESCE(sm.academic_year, '2026-2027') AS academic_year
        FROM users u
        LEFT JOIN students_master sm ON sm.user_id = u.id
        WHERE u.id = ? AND u.status = 'ACTIVE'`,

@@ -15,6 +15,7 @@ const driveCtrl = require('../controllers/driveController');
 const appCtrl = require('../controllers/applicationController');
 const intCtrl = require('../controllers/interviewController');
 const mockIntCtrl = require('../controllers/mockInterviewController');
+const videocallCtrl = require('../controllers/videocall');
 const assessCtrl = require('../controllers/assessmentController');
 const trainCtrl = require('../controllers/trainingController');
 const internCtrl = require('../controllers/internshipController');
@@ -49,10 +50,14 @@ router.get('/students/:id', authenticateToken, studentCtrl.getStudentById);
 router.put('/students/:id/profile', authenticateToken, studentCtrl.updateStudentProfile);
 router.post('/students/sync-erp', authenticateToken, studentCtrl.syncFromErp);
 
-// 4. Companies
+// 4. Companies & Placement Drives
 router.get('/companies', authenticateToken, compCtrl.getAllCompanies);
-router.post('/companies', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN']), compCtrl.createCompany);
-router.put('/companies/:id', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN']), compCtrl.updateCompany);
+router.get('/companies/meta/departments', authenticateToken, compCtrl.getMetadata);
+router.get('/companies/:id', authenticateToken, compCtrl.getCompanyById);
+router.post('/companies', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.createCompany);
+router.put('/companies/:id', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.updateCompany);
+router.delete('/companies/:id', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.deleteCompany);
+router.post('/companies/:id/apply', authenticateToken, compCtrl.applyCompanyDrive);
 
 // 5. Jobs & Opportunities
 router.get('/jobs', authenticateToken, jobCtrl.getAllJobs);
@@ -76,10 +81,22 @@ router.post('/interviews/schedule', authenticateToken, authorize(['TPO_OFFICER',
 router.put('/interviews/:id/feedback', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'RECRUITER']), intCtrl.submitInterviewFeedback);
 
 // 8b. Mock Video Call Interviews (WebRTC Meet System)
-router.get('/mock-interviews', authenticateToken, mockIntCtrl.getMockInterviews);
-router.get('/mock-interviews/:roomCode', authenticateToken, mockIntCtrl.getMockInterviewByCode);
-router.post('/mock-interviews', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF', 'RECRUITER']), mockIntCtrl.createMockInterview);
-router.put('/mock-interviews/:id/evaluate', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF', 'RECRUITER']), mockIntCtrl.evaluateMockInterview);
+router.get('/mock-interviews/ice-servers', authenticateToken, videocallCtrl.getIceServers);
+router.get('/mock-interviews', authenticateToken, videocallCtrl.getMeetings);
+router.get('/mock-interviews/:roomCode', authenticateToken, videocallCtrl.getMeetingByCode);
+router.post('/mock-interviews', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF', 'RECRUITER']), videocallCtrl.createMeeting);
+router.put('/mock-interviews/:id/status', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF', 'RECRUITER']), videocallCtrl.updateMeetingStatus);
+router.put('/mock-interviews/:id/evaluate', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF', 'RECRUITER']), videocallCtrl.evaluateMeeting);
+router.delete('/mock-interviews/:id', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF']), videocallCtrl.deleteMeeting);
+
+// 8c. Dedicated WebRTC Video Call Endpoints
+router.get('/videocall/ice-servers', authenticateToken, videocallCtrl.getIceServers);
+router.get('/videocall/meetings', authenticateToken, videocallCtrl.getMeetings);
+router.get('/videocall/meetings/:roomCode', authenticateToken, videocallCtrl.getMeetingByCode);
+router.post('/videocall/meetings', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF', 'RECRUITER']), videocallCtrl.createMeeting);
+router.put('/videocall/meetings/:id/status', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF', 'RECRUITER']), videocallCtrl.updateMeetingStatus);
+router.put('/videocall/meetings/:id/evaluate', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF', 'RECRUITER']), videocallCtrl.evaluateMeeting);
+router.delete('/videocall/meetings/:id', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR', 'STAFF']), videocallCtrl.deleteMeeting);
 
 // 9. Assessment & Coding Execution Platform
 router.get('/assessment/runtime-status', assessCtrl.getRuntimeStatus);

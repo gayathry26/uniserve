@@ -100,6 +100,7 @@ async function runMigrations() {
         programme VARCHAR(50) DEFAULT 'B.Tech',
         batch VARCHAR(20) DEFAULT '2023-2027',
         graduation_year INT DEFAULT 2027,
+        academic_year VARCHAR(20) DEFAULT '2026-2027',
         current_semester INT DEFAULT 7,
         cgpa DECIMAL(4,2) DEFAULT 0.00,
         active_backlogs INT DEFAULT 0,
@@ -153,6 +154,17 @@ async function runMigrations() {
         rating DECIMAL(3,2) DEFAULT 4.5,
         logo_url VARCHAR(255),
         description TEXT,
+        eligible_departments JSON,
+        academic_year VARCHAR(20) DEFAULT '2026-2027',
+        eligible_student_count INT DEFAULT 60,
+        min_cgpa DECIMAL(4,2) DEFAULT 6.50,
+        package_ctc DECIMAL(6,2) DEFAULT 12.00,
+        drive_date DATE DEFAULT '2026-11-25',
+        drive_venue VARCHAR(150) DEFAULT 'Main Campus Placement Cell',
+        drive_mode VARCHAR(50) DEFAULT 'ON_CAMPUS',
+        selection_stage VARCHAR(100) DEFAULT 'Online Assessment',
+        selection_rounds JSON,
+        application_deadline DATETIME,
         verified_by INT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -522,6 +534,13 @@ async function runMigrations() {
       }
       console.log(`✓ Tables provisioned in \`${deptDb}\``);
       await deptConn.end();
+    }
+
+    try {
+      const { initRolePermissions } = require('./initRolePermissions');
+      await initRolePermissions();
+    } catch (e) {
+      console.warn('initRolePermissions warning:', e.message);
     }
 
     console.log('\n================================================================');

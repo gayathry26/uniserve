@@ -282,6 +282,17 @@ async function seedDatabase() {
         tier: 'SUPER_DREAM',
         rating: 4.9,
         desc: 'World leader in search, cloud systems, artificial intelligence, and operating systems.',
+        eligible_departments: ['CSE', 'ECE', 'IT'],
+        academic_year: '2026-2027',
+        eligible_student_count: 50,
+        min_cgpa: 8.00,
+        package_ctc: 32.50,
+        drive_date: '2026-11-25',
+        drive_venue: 'Auditorium & Virtual Coding Labs',
+        drive_mode: 'HYBRID',
+        selection_stage: 'Online Assessment',
+        selection_rounds: ['Resume Screening', 'Online Coding Assessment', 'Tech System Design Interview', 'HR Discussion'],
+        application_deadline: '2026-11-20 23:59:59',
       },
       {
         name: 'Microsoft India',
@@ -292,6 +303,17 @@ async function seedDatabase() {
         tier: 'SUPER_DREAM',
         rating: 4.8,
         desc: 'Global developer of Windows, Azure Cloud, developer platforms, and enterprise solutions.',
+        eligible_departments: ['CSE', 'ECE', 'EEE', 'IT'],
+        academic_year: '2026-2027',
+        eligible_student_count: 60,
+        min_cgpa: 7.50,
+        package_ctc: 28.00,
+        drive_date: '2026-12-05',
+        drive_venue: 'Main Placement Seminar Hall',
+        drive_mode: 'ON_CAMPUS',
+        selection_stage: 'Online Assessment',
+        selection_rounds: ['Eligibility Filter', 'Online Aptitude & Coding', 'Technical Round 1 & 2', 'AA & Leadership Interview'],
+        application_deadline: '2026-11-28 23:59:59',
       },
       {
         name: 'Tata Consultancy Services (TCS)',
@@ -302,6 +324,17 @@ async function seedDatabase() {
         tier: 'REGULAR',
         rating: 4.2,
         desc: 'Global leader in IT services, consulting, and business solutions with mass campus drives.',
+        eligible_departments: ['CSE', 'ECE', 'EEE', 'MECH', 'CIVIL', 'IT'],
+        academic_year: '2026-2027',
+        eligible_student_count: 150,
+        min_cgpa: 6.50,
+        package_ctc: 9.00,
+        drive_date: '2026-11-18',
+        drive_venue: 'Campus Placement Block',
+        drive_mode: 'ON_CAMPUS',
+        selection_stage: 'Online Assessment',
+        selection_rounds: ['National Qualifier Test (NQT)', 'Technical Interview', 'Managerial Interview', 'HR Final'],
+        application_deadline: '2026-11-15 23:59:59',
       },
       {
         name: 'Larsen & Toubro (L&T)',
@@ -312,16 +345,48 @@ async function seedDatabase() {
         tier: 'DREAM',
         rating: 4.5,
         desc: 'Premier Indian multinational engaged in EPC projects, manufacturing, defence, and high-tech.',
+        eligible_departments: ['MECH', 'CIVIL', 'EEE', 'ECE'],
+        academic_year: '2026-2027',
+        eligible_student_count: 40,
+        min_cgpa: 7.00,
+        package_ctc: 8.50,
+        drive_date: '2026-12-10',
+        drive_venue: 'Mechanical Block & Auditorium',
+        drive_mode: 'ON_CAMPUS',
+        selection_stage: 'Registration Stage',
+        selection_rounds: ['Core Engineering Aptitude', 'Technical Interview', 'Group Discussion', 'Final HR'],
+        application_deadline: '2026-12-01 23:59:59',
       },
     ];
 
     const companyIdMap = {};
     for (const c of companies) {
       await commonConn.query(
-        `INSERT INTO companies (uuid, name, industry, website, headquarters, contact_email, tier, status, rating, description)
-         VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?)
-         ON DUPLICATE KEY UPDATE tier = VALUES(tier), description = VALUES(description)`,
-        [uuidv4(), c.name, c.industry, c.website, c.headquarters, c.email, c.tier, c.rating, c.desc]
+        `INSERT INTO companies (uuid, name, industry, website, headquarters, contact_email, tier, status, rating, description, eligible_departments, academic_year, eligible_student_count, min_cgpa, package_ctc, drive_date, drive_venue, drive_mode, selection_stage, selection_rounds, application_deadline)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE tier = VALUES(tier), description = VALUES(description), eligible_departments = VALUES(eligible_departments), academic_year = VALUES(academic_year), eligible_student_count = VALUES(eligible_student_count), min_cgpa = VALUES(min_cgpa), package_ctc = VALUES(package_ctc), drive_date = VALUES(drive_date), drive_venue = VALUES(drive_venue), drive_mode = VALUES(drive_mode), selection_stage = VALUES(selection_stage), selection_rounds = VALUES(selection_rounds), application_deadline = VALUES(application_deadline)`,
+        [
+          uuidv4(),
+          c.name,
+          c.industry,
+          c.website,
+          c.headquarters,
+          c.email,
+          c.tier,
+          c.rating,
+          c.desc,
+          JSON.stringify(c.eligible_departments),
+          c.academic_year,
+          c.eligible_student_count,
+          c.min_cgpa,
+          c.package_ctc,
+          c.drive_date,
+          c.drive_venue,
+          c.drive_mode,
+          c.selection_stage,
+          JSON.stringify(c.selection_rounds),
+          c.application_deadline,
+        ]
       );
       const [[cRow]] = await commonConn.query('SELECT id FROM companies WHERE name = ?', [c.name]);
       companyIdMap[c.name] = cRow.id;

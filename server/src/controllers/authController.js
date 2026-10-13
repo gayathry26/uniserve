@@ -23,7 +23,9 @@ async function login(req, res, next) {
     const withUniserve = identifier.includes('@') ? identifier : `${identifier}@uniserve.edu`;
 
     const users = await queryCommon(
-      `SELECT u.*, sm.id AS student_id, sm.register_number, sm.cgpa, sm.placement_status
+      `SELECT u.*, sm.id AS student_id, sm.register_number, sm.cgpa, sm.placement_status,
+              sm.batch, sm.graduation_year, COALESCE(sm.academic_year, '2026-2027') AS academic_year,
+              COALESCE(sm.department_code, u.department_code) AS final_dept
        FROM users u
        LEFT JOIN students_master sm ON sm.user_id = u.id
        WHERE u.email = ? OR u.email = ? OR u.email = ? OR sm.register_number = ?`,
@@ -60,7 +62,7 @@ async function login(req, res, next) {
         userId: user.id,
         roleId: user.role_id,
         roleName: user.role_name,
-        departmentCode: user.department_code,
+        departmentCode: user.final_dept || user.department_code,
       },
       JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
@@ -71,7 +73,7 @@ async function login(req, res, next) {
       action: 'LOGIN_SUCCESS',
       module: 'AUTH',
       details: { email: user.email, role: user.role_name },
-      departmentCode: user.department_code,
+      departmentCode: user.final_dept || user.department_code,
     });
 
     res.json({
@@ -85,11 +87,14 @@ async function login(req, res, next) {
         firstName: user.first_name,
         lastName: user.last_name,
         roleName: user.role_name,
-        departmentCode: user.department_code,
+        departmentCode: user.final_dept || user.department_code,
         studentId: user.student_id,
         registerNumber: user.register_number,
         cgpa: user.cgpa,
         placementStatus: user.placement_status,
+        batch: user.batch,
+        graduationYear: user.graduation_year,
+        academicYear: user.academic_year || '2026-2027',
       },
     });
   } catch (err) {
@@ -115,6 +120,11 @@ async function getCurrentUser(req, res, next) {
         departmentCode: user.department_code,
         studentId: user.student_id,
         registerNumber: user.register_number,
+        cgpa: user.cgpa,
+        placementStatus: user.placement_status,
+        batch: user.batch,
+        graduationYear: user.graduation_year,
+        academicYear: user.academic_year || '2026-2027',
       },
     });
   } catch (err) {
@@ -144,7 +154,9 @@ async function quickSwitchDemoRole(req, res, next) {
     }
 
     const users = await queryCommon(
-      `SELECT u.*, sm.id AS student_id, sm.register_number, sm.cgpa, sm.placement_status
+      `SELECT u.*, sm.id AS student_id, sm.register_number, sm.cgpa, sm.placement_status,
+              sm.batch, sm.graduation_year, COALESCE(sm.academic_year, '2026-2027') AS academic_year,
+              COALESCE(sm.department_code, u.department_code) AS final_dept
        FROM users u
        LEFT JOIN students_master sm ON sm.user_id = u.id
        WHERE u.email = ?`,
@@ -161,7 +173,7 @@ async function quickSwitchDemoRole(req, res, next) {
         userId: user.id,
         roleId: user.role_id,
         roleName: user.role_name,
-        departmentCode: user.department_code,
+        departmentCode: user.final_dept || user.department_code,
       },
       JWT_SECRET,
       { expiresIn: '24h' }
@@ -178,11 +190,14 @@ async function quickSwitchDemoRole(req, res, next) {
         firstName: user.first_name,
         lastName: user.last_name,
         roleName: user.role_name,
-        departmentCode: user.department_code,
+        departmentCode: user.final_dept || user.department_code,
         studentId: user.student_id,
         registerNumber: user.register_number,
         cgpa: user.cgpa,
         placementStatus: user.placement_status,
+        batch: user.batch,
+        graduationYear: user.graduation_year,
+        academicYear: user.academic_year || '2026-2027',
       },
     });
   } catch (err) {

@@ -6,7 +6,7 @@ export const ALL_PAGES = [
   { path: '/', label: 'Placement Dashboard', category: 'Core & Overview' },
   { path: '/students', label: 'Students Roster', category: 'Student Management' },
   { path: '/profile', label: 'My Student Profile', category: 'Student Management' },
-  { path: '/companies', label: 'Hiring Companies', category: 'Recruitment & Drives' },
+  { path: '/companies', label: 'Placement Companies', category: 'Recruitment & Drives' },
   { path: '/jobs', label: 'Jobs & Openings', category: 'Recruitment & Drives' },
   { path: '/drives', label: 'Placement Drives', category: 'Recruitment & Drives' },
   { path: '/applications', label: 'Applications Pipeline', category: 'Applications & Evaluation' },

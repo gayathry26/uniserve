@@ -38,7 +38,7 @@ export function Sidebar() {
     { to: '/', label: 'Placement Dashboard', icon: LayoutDashboard },
     { to: '/students', label: 'Students Roster', icon: Users },
     { to: '/profile', label: 'My Student Profile', icon: Users },
-    { to: '/companies', label: 'Hiring Companies', icon: Building2 },
+    { to: '/companies', label: 'Placement Companies', icon: Building2 },
     { to: '/jobs', label: 'Jobs & Openings', icon: Briefcase },
     { to: '/drives', label: 'Placement Drives', icon: CalendarDays },
     { to: '/applications', label: 'Applications Pipeline', icon: FileCheck2 },
