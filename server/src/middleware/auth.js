@@ -17,9 +17,18 @@ async function authenticateToken(req, res, next) {
     });
   }
 
+  let decoded;
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    
+    decoded = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid, expired, or malformed authentication token.',
+      error: err.name,
+    });
+  }
+
+  try {
     // Fetch live user to ensure active status
     const users = await queryCommon(
       `SELECT u.id, u.uuid, u.email, u.role_id, u.role_name, u.first_name, u.last_name, 
@@ -41,12 +50,8 @@ async function authenticateToken(req, res, next) {
 
     req.user = users[0];
     next();
-  } catch (err) {
-    return res.status(403).json({
-      success: false,
-      message: 'Invalid, expired, or malformed authentication token.',
-      error: err.name,
-    });
+  } catch (dbErr) {
+    next(dbErr);
   }
 }
 

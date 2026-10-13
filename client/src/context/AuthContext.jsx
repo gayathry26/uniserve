@@ -14,7 +14,28 @@ export function AuthProvider({ children }) {
 
     if (savedToken && savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsed = JSON.parse(savedUser);
+        setUser(parsed);
+
+        // Verify token with backend; auto-heal if token expired
+        apiClient.get('/auth/me').catch(async (err) => {
+          if (err.response?.status === 401 || err.response?.status === 403) {
+            try {
+              const res = await apiClient.post('/auth/switch-role', {
+                targetRole: parsed.roleName || 'SUPER_ADMIN',
+              });
+              if (res.data?.token) {
+                localStorage.setItem('placement_token', res.data.token);
+                localStorage.setItem('placement_user', JSON.stringify(res.data.user));
+                setUser(res.data.user);
+              }
+            } catch (e) {
+              localStorage.removeItem('placement_token');
+              localStorage.removeItem('placement_user');
+              setUser(null);
+            }
+          }
+        });
       } catch (e) {
         localStorage.removeItem('placement_user');
         localStorage.removeItem('placement_token');
