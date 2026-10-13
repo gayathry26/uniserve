@@ -207,6 +207,7 @@ export default function App() {
               <Route path="/jobs" element={<ProtectedRoute path="/jobs"><Jobs /></ProtectedRoute>} />
               <Route path="/drives" element={<ProtectedRoute path="/drives"><Drives /></ProtectedRoute>} />
               <Route path="/applications" element={<ProtectedRoute path="/applications"><Applications /></ProtectedRoute>} />
+              <Route path="/my-applications" element={<ProtectedRoute path="/applications"><Applications /></ProtectedRoute>} />
               <Route path="/assessment" element={<ProtectedRoute path="/assessment"><Assessment /></ProtectedRoute>} />
               <Route path="/exam" element={<ProtectedRoute path="/assessment"><ExamScreen /></ProtectedRoute>} />
               <Route path="/interviews" element={<ProtectedRoute path="/interviews"><Interviews /></ProtectedRoute>} />

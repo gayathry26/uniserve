@@ -58,6 +58,15 @@ router.post('/companies', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 
 router.put('/companies/:id', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.updateCompany);
 router.delete('/companies/:id', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.deleteCompany);
 router.post('/companies/:id/apply', authenticateToken, compCtrl.applyCompanyDrive);
+router.post('/companies/:id/withdraw', authenticateToken, compCtrl.withdrawCompanyApplication);
+
+// 4b. Company Applicants, Announcements & Rounds Management
+router.get('/companies/:id/applicants', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN', 'FACULTY_COORDINATOR']), compCtrl.getCompanyApplicants);
+router.put('/companies/:id/applicants/:applicationId', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.updateCompanyApplicant);
+router.post('/companies/:id/applicants/bulk-update', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.bulkUpdateCompanyApplicants);
+router.get('/companies/:id/announcements', authenticateToken, compCtrl.getCompanyAnnouncements);
+router.post('/companies/:id/announcements', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.createCompanyAnnouncement);
+router.put('/companies/:id/rounds/:roundId', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'SUPER_ADMIN']), compCtrl.updateDriveRound);
 
 // 5. Jobs & Opportunities
 router.get('/jobs', authenticateToken, jobCtrl.getAllJobs);
@@ -72,7 +81,10 @@ router.put('/drives/:id/stage', authenticateToken, authorize(['TPO_OFFICER', 'AD
 
 // 7. Applications
 router.get('/applications', authenticateToken, appCtrl.getApplications);
+router.get('/applications/my-applications', authenticateToken, appCtrl.getMyApplications);
+router.get('/applications/my', authenticateToken, appCtrl.getMyApplications);
 router.post('/applications/apply', authenticateToken, appCtrl.applyToJob);
+router.post('/applications/:id/withdraw', authenticateToken, appCtrl.withdrawApplication);
 router.put('/applications/:id/status', authenticateToken, authorize(['TPO_OFFICER', 'ADMIN', 'RECRUITER', 'FACULTY_COORDINATOR']), appCtrl.updateApplicationStatus);
 
 // 8. Interviews

@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { StatusBadge, Badge } from '../components/Badge';
 import { Modal, LoadingSpinner } from '../components/Modal';
+import { CompanyManagementModal } from '../components/placement/CompanyManagementModal';
+import { StudentCompanyDetailsModal } from '../components/placement/StudentCompanyDetailsModal';
+import { StudentApplyConfirmModal } from '../components/placement/StudentApplyConfirmModal';
 import {
   Building2,
   Globe,
@@ -30,6 +34,9 @@ import {
   Info,
   Layers,
   Award,
+  ArrowRight,
+  ShieldCheck,
+  FileCheck2,
 } from 'lucide-react';
 
 const ALL_DEPARTMENTS = [
@@ -45,6 +52,7 @@ const ALL_DEPARTMENTS = [
 const ACADEMIC_YEARS = ['2026-2027', '2025-2026', '2024-2025', '2027-2028'];
 
 export function Companies() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { currentTheme } = useTheme();
 
@@ -60,6 +68,9 @@ export function Companies() {
   const [deptFilter, setDeptFilter] = useState('ALL');
   const [yearFilter, setYearFilter] = useState('ALL');
 
+  // Student Logical Category Tab: 'ELIGIBLE' | 'APPLIED' | 'INELIGIBLE' | 'ALL'
+  const [studentCategoryTab, setStudentCategoryTab] = useState('ELIGIBLE');
+
   // Admin Student Simulation filter (preview what specific dept sees)
   const [adminSimulateDept, setAdminSimulateDept] = useState('NONE');
 
@@ -68,6 +79,14 @@ export function Companies() {
   const [modalMode, setModalMode] = useState('create'); // 'create' or 'edit'
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
   const [viewDossierCompany, setViewDossierCompany] = useState(null);
+
+  // Placement Officer Company Management Drawer / Modal (All 6 tabs)
+  const [manageCompanyId, setManageCompanyId] = useState(null);
+
+  // Student Detail & Application Modals
+  const [studentDetailsCompany, setStudentDetailsCompany] = useState(null);
+  const [applyConfirmCompany, setApplyConfirmCompany] = useState(null);
+  const [withdrawingCompanyId, setWithdrawingCompanyId] = useState(null);
 
   // Applying state
   const [applyingCompanyId, setApplyingCompanyId] = useState(null);
@@ -238,21 +257,60 @@ export function Companies() {
     }
   };
 
-  // Handle Student Apply for Drive
-  const handleApplyDrive = async (companyId, companyName) => {
-    setApplyingCompanyId(companyId);
+  // Handle Student Apply for Drive (open confirmation modal)
+  const handleOpenApplyModal = (comp) => {
+    setApplyConfirmCompany(comp);
+  };
+
+  // Student Confirm and Submit Application
+  const handleConfirmApply = async (companyId) => {
+    setIsSubmitting(true);
     try {
       const res = await apiClient.post(`/companies/${companyId}/apply`);
+      const resData = res.data?.data;
       setFeedbackMessage({
         type: 'success',
-        text: res.data.message || `Application for ${companyName} placement drive submitted successfully!`,
+        text: `Application submitted successfully! Application ID: ${resData?.application_id ? `#APPL-${resData.application_id}` : 'Confirmed'}. You can track your multi-round selection progress under My Applications.`,
       });
+      setApplyConfirmCompany(null);
+      if (studentDetailsCompany && studentDetailsCompany.id === companyId) {
+        setStudentDetailsCompany({
+          ...studentDetailsCompany,
+          has_applied: true,
+          application_status: 'APPLIED',
+          application_id: resData?.application_id,
+        });
+      }
       fetchCompanies();
-      setTimeout(() => setFeedbackMessage(null), 6000);
+      setTimeout(() => setFeedbackMessage(null), 8000);
     } catch (err) {
       alert(err.response?.data?.message || 'Failed to submit drive application.');
     } finally {
-      setApplyingCompanyId(null);
+      setIsSubmitting(false);
+    }
+  };
+
+  // Student Withdraw Application before deadline
+  const handleWithdrawCompany = async (companyId) => {
+    if (!window.confirm('Are you sure you want to withdraw your application for this placement drive?')) {
+      return;
+    }
+    setWithdrawingCompanyId(companyId);
+    try {
+      const res = await apiClient.post(`/companies/${companyId}/withdraw`);
+      setFeedbackMessage({
+        type: 'success',
+        text: res.data?.message || 'Application withdrawn successfully.',
+      });
+      if (studentDetailsCompany && studentDetailsCompany.id === companyId) {
+        setStudentDetailsCompany(null);
+      }
+      fetchCompanies();
+      setTimeout(() => setFeedbackMessage(null), 6000);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to withdraw application.');
+    } finally {
+      setWithdrawingCompanyId(null);
     }
   };
 
@@ -281,6 +339,21 @@ export function Companies() {
       eligible_departments: [],
     }));
   };
+
+  // Student 3 Logical Categories Computation
+  const eligibleCompanies = companies.filter((c) => !c.has_applied && c.is_eligible !== false);
+  const appliedCompanies = companies.filter((c) => c.has_applied);
+  const ineligibleCompanies = companies.filter((c) => !c.has_applied && c.is_eligible === false);
+
+  const displayedCompanies = isStudent
+    ? studentCategoryTab === 'ELIGIBLE'
+      ? eligibleCompanies
+      : studentCategoryTab === 'APPLIED'
+      ? appliedCompanies
+      : studentCategoryTab === 'INELIGIBLE'
+      ? ineligibleCompanies
+      : companies
+    : companies;
 
   // Metrics summary
   const totalCompaniesCount = companies.length;
@@ -529,24 +602,113 @@ export function Companies() {
         )}
       </div>
 
+      {/* Student 3 Logical Categories Navigation Tabs */}
+      {isStudent && (
+        <div className="bg-white p-2.5 rounded-2xl border border-slate-200 shadow-2xs space-y-2">
+          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100/90 rounded-xl">
+            <button
+              onClick={() => setStudentCategoryTab('ELIGIBLE')}
+              className={`flex-1 min-w-[140px] px-4 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                studentCategoryTab === 'ELIGIBLE'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Eligible Companies</span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                studentCategoryTab === 'ELIGIBLE' ? 'bg-emerald-700 text-white' : 'bg-slate-200 text-slate-700'
+              }`}>
+                {eligibleCompanies.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setStudentCategoryTab('APPLIED')}
+              className={`flex-1 min-w-[140px] px-4 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                studentCategoryTab === 'APPLIED'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <FileCheck2 className="w-4 h-4" />
+              <span>Applied Companies</span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                studentCategoryTab === 'APPLIED' ? 'bg-blue-700 text-white' : 'bg-slate-200 text-slate-700'
+              }`}>
+                {appliedCompanies.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setStudentCategoryTab('INELIGIBLE')}
+              className={`flex-1 min-w-[140px] px-4 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                studentCategoryTab === 'INELIGIBLE'
+                  ? 'bg-amber-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <AlertTriangle className="w-4 h-4" />
+              <span>Ineligible Companies</span>
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                studentCategoryTab === 'INELIGIBLE' ? 'bg-amber-700 text-white' : 'bg-slate-200 text-slate-700'
+              }`}>
+                {ineligibleCompanies.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setStudentCategoryTab('ALL')}
+              className={`px-4 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                studentCategoryTab === 'ALL'
+                  ? 'bg-slate-800 text-white shadow-sm'
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-white/60'
+              }`}
+            >
+              <span>All ({companies.length})</span>
+            </button>
+          </div>
+
+          <div className="px-3 py-1 text-[11px] text-slate-500 flex items-center justify-between">
+            <span>
+              {studentCategoryTab === 'ELIGIBLE' && 'Showing recruitment drives that match your department, graduation year, and minimum CGPA.'}
+              {studentCategoryTab === 'APPLIED' && 'Showing placement drives you have applied for. Track multi-stage progression in My Applications.'}
+              {studentCategoryTab === 'INELIGIBLE' && 'Showing companies with restrictions (branch restriction, CGPA cutoff unmet, or max active backlogs).'}
+              {studentCategoryTab === 'ALL' && 'Viewing all university corporate recruitment drives.'}
+            </span>
+            <span className="font-semibold text-slate-700">
+              {displayedCompanies.length} opportunities listed
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Companies Grid */}
       {loading ? (
         <LoadingSpinner text="Retrieving verified placement company listings..." />
-      ) : companies.length === 0 ? (
+      ) : displayedCompanies.length === 0 ? (
         <div className="bg-white p-12 text-center rounded-2xl border border-slate-200 space-y-3">
           <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-400 mx-auto flex items-center justify-center">
             <Building2 className="w-6 h-6" />
           </div>
-          <h3 className="font-bold text-slate-800 text-sm">No Placement Companies Found</h3>
+          <h3 className="font-bold text-slate-800 text-sm">
+            {isStudent && studentCategoryTab === 'APPLIED'
+              ? 'No Applications Submitted Yet'
+              : isStudent && studentCategoryTab === 'INELIGIBLE'
+              ? 'No Ineligible Companies Found'
+              : 'No Placement Companies Found'}
+          </h3>
           <p className="text-xs text-slate-500 max-w-md mx-auto">
-            {isStudent
-              ? `There are currently no active placement drives configured for branch '${user.departmentCode}' and academic year '${user.academicYear}'. Please check back as the placement season progresses.`
+            {isStudent && studentCategoryTab === 'APPLIED'
+              ? 'You have not submitted applications to any placement drives yet. Switch to "Eligible Companies" to browse and apply for open opportunities.'
+              : isStudent
+              ? `There are currently no placement drives matching this view for branch '${user.departmentCode}' and academic year '${user.academicYear}'.`
               : `No companies match the selected search and filter criteria. You can register a new company profile above.`}
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-5">
-          {companies.map((comp) => {
+          {displayedCompanies.map((comp) => {
             const depts = Array.isArray(comp.eligible_departments)
               ? comp.eligible_departments
               : typeof comp.eligible_departments === 'string'
@@ -557,7 +719,7 @@ export function Companies() {
               ? comp.selection_rounds
               : typeof comp.selection_rounds === 'string'
               ? JSON.parse(comp.selection_rounds || '[]')
-              : ['Online Assessment', 'Technical Interview', 'HR Discussion'];
+              : ['Resume Screening', 'Online Coding Assessment', 'Technical Interview', 'HR Discussion'];
 
             const quota = comp.configured_eligible_quota || comp.eligible_student_count || 60;
             const matchingCount = comp.enrolled_matching_students_count || 0;
@@ -565,6 +727,8 @@ export function Companies() {
 
             const isStudentDeptEligible = isStudent ? depts.includes(user.departmentCode) : true;
             const meetsCgpa = isStudent ? parseFloat(user.cgpa || 0) >= parseFloat(comp.min_cgpa || 0) : true;
+            const isEligible = comp.is_eligible !== false;
+            const hasApplied = comp.has_applied;
 
             return (
               <div
@@ -582,7 +746,9 @@ export function Companies() {
                         <h3 className="font-bold text-base text-slate-900 group-hover:text-blue-600 transition-colors">
                           {comp.name}
                         </h3>
-                        <p className="text-xs text-slate-500 font-medium">{comp.industry}</p>
+                        <p className="text-xs text-slate-500 font-medium">
+                          {comp.job_title ? `${comp.job_title} • ` : ''}{comp.industry}
+                        </p>
                       </div>
                     </div>
 
@@ -657,13 +823,13 @@ export function Companies() {
 
                       {isStudent && (
                         <div>
-                          {meetsCgpa ? (
+                          {meetsCgpa && isStudentDeptEligible ? (
                             <span className="inline-flex items-center gap-1 text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                               <CheckCircle2 className="w-3.5 h-3.5" /> You Meet Criteria ({user.cgpa} &ge; {comp.min_cgpa})
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 text-rose-700 font-bold bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
-                              <XCircle className="w-3.5 h-3.5" /> Requires {comp.min_cgpa} (Yours: {user.cgpa})
+                              <XCircle className="w-3.5 h-3.5" /> Cutoff {comp.min_cgpa} (Yours: {user.cgpa})
                             </span>
                           )}
                         </div>
@@ -696,38 +862,104 @@ export function Companies() {
                     {/* Recruitment Stages Mini Stepper */}
                     {rounds && rounds.length > 0 && (
                       <div className="pt-1.5 border-t border-blue-100/70 flex items-center gap-1 overflow-x-auto text-[10px] text-slate-500">
-                        {rounds.map((rnd, idx) => (
-                          <span
-                            key={idx}
-                            className="shrink-0 bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700 font-medium"
-                          >
-                            {idx + 1}. {rnd}
-                          </span>
-                        ))}
+                        {rounds.map((rnd, idx) => {
+                          const roundLabel = typeof rnd === 'string' ? rnd : (rnd.round_name || `Round ${idx + 1}`);
+                          return (
+                            <span
+                              key={idx}
+                              className="shrink-0 bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700 font-medium"
+                            >
+                              {idx + 1}. {roundLabel}
+                            </span>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
+
+                  {/* Ineligible Alert Banner (if student is ineligible) */}
+                  {isStudent && !hasApplied && !isEligible && (
+                    <div className="rounded-xl border border-amber-300 bg-amber-50/80 p-3 text-xs space-y-1">
+                      <div className="flex items-center gap-1.5 font-bold text-amber-900 text-[11px]">
+                        <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                        <span>Ineligibility Notice</span>
+                      </div>
+                      <ul className="list-disc list-inside text-[11px] text-amber-800 pl-1 space-y-0.5">
+                        {(comp.ineligibility_reasons || ['Branch or academic criteria unmet']).map((reason, i) => (
+                          <li key={i}>{reason}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Registered Status Banner (if student already applied) */}
+                  {isStudent && hasApplied && (
+                    <div className="rounded-xl border border-emerald-300 bg-emerald-50/90 p-3 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <div>
+                          <span className="font-bold text-emerald-900 text-xs">Application Submitted</span>
+                          <span className="text-[11px] text-emerald-700 block">
+                            App ID: #{comp.application_id || 'REGISTERED'} • Status: {comp.application_status || 'APPLIED'} • Round {comp.current_round || 1}
+                          </span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => navigate('/applications')}
+                        className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[11px] transition-colors cursor-pointer"
+                      >
+                        Track &rarr;
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Placement Officer Pipeline Counters Box */}
+                  {isAdmin && (
+                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-2.5 flex items-center justify-between text-[11px] font-semibold text-slate-700">
+                      <div className="flex items-center gap-3">
+                        <span>Applicants: <strong className="text-blue-700">{comp.total_applicants || 0}</strong></span>
+                        <span>•</span>
+                        <span>Shortlisted: <strong className="text-purple-700">{comp.shortlisted_count || 0}</strong></span>
+                        <span>•</span>
+                        <span>Selected: <strong className="text-emerald-700">{comp.selected_count || 0}</strong></span>
+                      </div>
+                      <button
+                        onClick={() => setManageCompanyId(comp.id)}
+                        className="text-blue-600 hover:underline font-bold"
+                      >
+                        View Registered &rarr;
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Card Footer Actions */}
                 <div className="px-5 py-3.5 bg-slate-50/80 border-t border-slate-100 flex items-center justify-between text-xs">
-                  {/* Left: Star Rating and Dossier button */}
+                  {/* Left: Rating and Details button */}
                   <div className="flex items-center gap-2">
                     <span className="flex items-center gap-1 text-amber-600 font-bold text-xs bg-white px-2 py-1 rounded border border-slate-200">
                       <Star className="w-3.5 h-3.5 fill-current" /> {comp.rating || '4.5'}
                     </span>
                     <button
-                      onClick={() => setViewDossierCompany(comp)}
+                      onClick={() => (isStudent ? setStudentDetailsCompany(comp) : setManageCompanyId(comp.id))}
                       className="text-slate-600 hover:text-blue-600 font-semibold text-xs hover:underline cursor-pointer"
                     >
-                      View Dossier
+                      View Details
                     </button>
                   </div>
 
-                  {/* Right Actions: Admin Edit/Delete vs Student Apply */}
+                  {/* Right Actions: Admin vs Student */}
                   <div className="flex items-center gap-2">
                     {isAdmin && (
                       <>
+                        <button
+                          onClick={() => setManageCompanyId(comp.id)}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-xs transition-colors cursor-pointer text-xs"
+                          title="View registered students, review eligibility, schedule rounds, and publish results"
+                        >
+                          <Users className="w-3.5 h-3.5" /> Manage Company
+                        </button>
+
                         <button
                           onClick={() => handleOpenEditModal(comp)}
                           className="inline-flex items-center gap-1 px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-semibold rounded-lg border border-slate-200 transition-colors cursor-pointer text-xs"
@@ -746,34 +978,54 @@ export function Companies() {
                     )}
 
                     {isStudent && (
-                      <div>
-                        {comp.has_applied ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg font-bold text-xs">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                            Registered ({comp.application_status || 'APPLIED'})
-                          </span>
-                        ) : meetsCgpa ? (
-                          <button
-                            onClick={() => handleApplyDrive(comp.id, comp.name)}
-                            disabled={applyingCompanyId === comp.id}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-xs transition-colors cursor-pointer disabled:opacity-50"
-                          >
-                            {applyingCompanyId === comp.id ? (
-                              'Submitting...'
-                            ) : (
-                              <>
-                                Apply for Drive <ChevronRight className="w-3.5 h-3.5" />
-                              </>
-                            )}
-                          </button>
+                      <div className="flex items-center gap-2">
+                        {hasApplied ? (
+                          <>
+                            <button
+                              onClick={() => navigate('/applications')}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs shadow-xs cursor-pointer transition-colors"
+                            >
+                              <FileCheck2 className="w-3.5 h-3.5" />
+                              Track in My Applications
+                            </button>
+                            <button
+                              onClick={() => setStudentDetailsCompany(comp)}
+                              className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-semibold rounded-lg border border-slate-200 text-xs cursor-pointer"
+                            >
+                              Details
+                            </button>
+                          </>
+                        ) : !isEligible ? (
+                          <>
+                            <button
+                              disabled
+                              className="px-3 py-1.5 bg-slate-200 text-slate-500 font-semibold rounded-lg text-xs cursor-not-allowed"
+                              title={comp.ineligibility_reasons?.join(', ') || 'Ineligible for this placement opportunity.'}
+                            >
+                              Ineligible to Apply
+                            </button>
+                            <button
+                              onClick={() => setStudentDetailsCompany(comp)}
+                              className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-semibold rounded-lg border border-slate-200 text-xs cursor-pointer"
+                            >
+                              View Reasons
+                            </button>
+                          </>
                         ) : (
-                          <button
-                            disabled
-                            className="px-3 py-1.5 bg-slate-200 text-slate-500 font-semibold rounded-lg text-xs cursor-not-allowed"
-                            title="You do not meet the minimum CGPA cutoff."
-                          >
-                            CGPA Cutoff Unmet
-                          </button>
+                          <>
+                            <button
+                              onClick={() => handleOpenApplyModal(comp)}
+                              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-xs transition-colors cursor-pointer text-xs"
+                            >
+                              Apply Now <ChevronRight className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => setStudentDetailsCompany(comp)}
+                              className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-semibold rounded-lg border border-slate-200 text-xs cursor-pointer"
+                            >
+                              View Details
+                            </button>
+                          </>
                         )}
                       </div>
                     )}
@@ -1203,6 +1455,38 @@ export function Companies() {
           </div>
         </Modal>
       )}
+
+      {/* Placement Officer Company Management Drawer / Modal */}
+      <CompanyManagementModal
+        isOpen={!!manageCompanyId}
+        onClose={() => setManageCompanyId(null)}
+        companyId={manageCompanyId}
+        onCompanyUpdated={fetchCompanies}
+      />
+
+      {/* Student Company Full Opportunity Details Modal */}
+      <StudentCompanyDetailsModal
+        isOpen={!!studentDetailsCompany}
+        onClose={() => setStudentDetailsCompany(null)}
+        company={studentDetailsCompany}
+        user={user}
+        onOpenApply={(c) => {
+          setStudentDetailsCompany(null);
+          setApplyConfirmCompany(c);
+        }}
+        onWithdraw={handleWithdrawCompany}
+        withdrawing={withdrawingCompanyId === studentDetailsCompany?.id}
+      />
+
+      {/* Student Apply Confirmation Modal */}
+      <StudentApplyConfirmModal
+        isOpen={!!applyConfirmCompany}
+        onClose={() => setApplyConfirmCompany(null)}
+        company={applyConfirmCompany}
+        user={user}
+        onConfirmApply={handleConfirmApply}
+        applying={isSubmitting}
+      />
     </div>
   );
 }

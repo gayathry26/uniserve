@@ -41,7 +41,7 @@ export function Sidebar() {
     { to: '/companies', label: 'Placement Companies', icon: Building2 },
     { to: '/jobs', label: 'Jobs & Openings', icon: Briefcase },
     { to: '/drives', label: 'Placement Drives', icon: CalendarDays },
-    { to: '/applications', label: 'Applications Pipeline', icon: FileCheck2 },
+    { to: '/applications', label: role === 'STUDENT' ? 'My Applications' : 'Applications Pipeline', icon: FileCheck2 },
     { to: '/assessment', label: 'Programming Assessment', icon: Code2 },
     { to: '/interviews', label: 'Interview Slots', icon: CalendarCheck },
     { to: '/videocall/interview', label: 'Mock Video Interview', icon: Video },

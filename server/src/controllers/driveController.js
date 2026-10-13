@@ -7,23 +7,46 @@ const { logAuditEvent } = require('../services/auditService');
  */
 async function getAllDrives(req, res, next) {
   try {
+    const isStudent = req.user?.role_name === 'STUDENT';
+    const studentId = req.user?.student_id;
+
     const drives = await queryCommon(
-      `SELECT pd.*, j.title AS job_title, j.ctc_lpa, c.name AS company_name, c.tier AS company_tier,
-              (SELECT COUNT(*) FROM job_applications WHERE job_id = pd.job_id) AS total_applicants
+      `SELECT pd.*, j.title AS job_title, j.ctc_lpa, c.id AS company_id, c.name AS company_name, c.tier AS company_tier,
+              (SELECT COUNT(*) FROM job_applications WHERE (drive_id = pd.id OR job_id = pd.job_id) AND status != 'WITHDRAWN') AS total_applicants,
+              (SELECT COUNT(*) FROM job_applications WHERE (drive_id = pd.id OR job_id = pd.job_id) AND status IN ('SHORTLISTED', 'IN_PROCESS')) AS shortlisted_count,
+              (SELECT COUNT(*) FROM job_applications WHERE (drive_id = pd.id OR job_id = pd.job_id) AND (status IN ('OFFERED', 'ACCEPTED') OR final_result = 'SELECTED')) AS selected_count
        FROM placement_drives pd
        JOIN jobs j ON j.id = pd.job_id
        JOIN companies c ON c.id = j.company_id
        ORDER BY pd.drive_date ASC`
     );
 
-    // Fetch rounds for each drive
+    // Fetch rounds and student application details for each drive
     const enrichedDrives = await Promise.all(
       drives.map(async (d) => {
         const rounds = await queryCommon(
           `SELECT * FROM drive_rounds WHERE drive_id = ? ORDER BY round_number ASC`,
           [d.id]
         );
-        return { ...d, rounds };
+
+        let studentApp = null;
+        if (isStudent && studentId) {
+          const [appRow] = await queryCommon(
+            `SELECT id, status, eligibility_status, current_round_number, final_result, applied_at
+             FROM job_applications
+             WHERE student_id = ? AND (drive_id = ? OR job_id = ?) AND status != 'WITHDRAWN'
+             LIMIT 1`,
+            [studentId, d.id, d.job_id]
+          );
+          studentApp = appRow || null;
+        }
+
+        return {
+          ...d,
+          rounds,
+          has_applied: !!studentApp,
+          student_application: studentApp,
+        };
       })
     );
 
