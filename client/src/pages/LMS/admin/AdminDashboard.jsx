@@ -448,7 +448,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
         { to: '/admin/dashboard/config', label: 'Test Config' }
       ]}
     >
-      {message && <p className="mb-4 rounded bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{message}</p>}
+      {message && <p className="mb-4 rounded bg-secondary px-3 py-2 text-sm text-foreground">{message}</p>}
 
       {section === 'students' && (
         <div className="space-y-6">
@@ -558,7 +558,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                               {student.college_name || <span className="text-slate-400 italic">N/A</span>}
                             </td>
                             <td className="p-3">
-                              <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
+                              <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-foreground">
                                 {student.department || 'N/A'}
                               </span>
                             </td>
@@ -589,7 +589,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                                     }
                                   }
                                 }}
-                                className="rounded bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-600 hover:bg-rose-100 transition-all"
+                                className="rounded bg-secondary px-2.5 py-1 text-xs font-bold text-foreground hover:bg-secondary transition-all"
                               >
                                 Delete
                               </button>
@@ -640,7 +640,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                         <td className="p-3">{c.id}</td>
                         <td className="p-3 font-semibold text-slate-800">{c.name}</td>
                         <td className="p-3">
-                          <span className={`px-2 py-1 rounded-full text-xs font-bold ${c.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
+                          <span className={`px-2 py-1 rounded-full text-xs font-bold ${c.status === 'active' ? 'bg-secondary text-foreground' : 'bg-slate-100 text-slate-600'}`}>
                             {c.status}
                           </span>
                         </td>
@@ -653,7 +653,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                           </button>
                           <button
                             onClick={() => handleDeleteCollege(c.id)}
-                            className="rounded bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-600 hover:bg-rose-100 transition-all"
+                            className="rounded bg-secondary px-2.5 py-1 text-xs font-bold text-foreground hover:bg-secondary transition-all"
                           >
                             Delete
                           </button>
@@ -683,7 +683,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                 {questionBanks.map((bank) => (
                   <div 
                     key={bank.bank_key} 
-                    className="cursor-pointer rounded-lg border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4 hover:shadow-md transition-all"
+                    className="cursor-pointer rounded-lg border border-slate-200 bg-neutral-100 dark:bg-neutral-900 border border-border text-foreground p-4 hover:shadow-md transition-all"
                     onClick={(e) => {
                       if (e.target.closest('button') || e.target.closest('input')) return;
                       setQuery((prev) => ({ ...prev, bank_key: bank.bank_key, page: 1 }));
@@ -744,7 +744,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                   (Filtered by: {questionBanks.find(b => b.bank_key === query.bank_key)?.display_name || query.bank_key})
                   <button 
                     onClick={() => setQuery((prev) => ({ ...prev, bank_key: '', page: 1 }))} 
-                    className="ml-2 text-rose-500 hover:underline text-xs"
+                    className="ml-2 text-foreground hover:underline text-xs"
                   >
                     Clear Filter
                   </button>
@@ -779,7 +779,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                 {bulkFile ? bulkFile.name : 'Select CSV'}
               </label>
               {bulkFile && (
-                <button onClick={handleImport} className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-all">
+                <button onClick={handleImport} className="rounded-lg bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] px-3 py-2 text-sm font-semibold text-white hover:bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] transition-all">
                   Import
                 </button>
               )}
@@ -824,12 +824,12 @@ const AdminDashboard = ({ section = 'questions' }) => {
                         <td className="p-3 font-medium text-slate-700">{r.subject}</td>
                         <td className="p-3 text-slate-600 max-w-md truncate">{r.question}</td>
                         <td className="p-3">
-                          <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${r.question_type === 'coding' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-700'}`}>
+                          <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${r.question_type === 'coding' ? 'bg-secondary text-foreground' : 'bg-slate-100 text-slate-700'}`}>
                             {r.question_type}
                           </span>
                         </td>
                         <td className="p-3">
-                          <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${r.difficulty === 'hard' ? 'bg-red-100 text-red-700' : r.difficulty === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                          <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${r.difficulty === 'hard' ? 'bg-red-100 text-red-700' : r.difficulty === 'medium' ? 'bg-secondary text-foreground' : 'bg-secondary text-foreground'}`}>
                             {r.difficulty}
                           </span>
                         </td>
@@ -1012,7 +1012,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={handleExportExcel}
-                    className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-emerald-700 transition-all"
+                    className="rounded-lg bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] transition-all"
                   >
                     Export Excel
                   </button>
@@ -1054,26 +1054,26 @@ const AdminDashboard = ({ section = 'questions' }) => {
                             <td className="p-3 font-bold text-slate-900">{a.name}</td>
                             <td className="p-3 font-semibold text-slate-700">{a.roll_number}</td>
                             <td className="p-3">
-                              <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700">
+                              <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-semibold text-foreground">
                                 {a.department || 'N/A'}
                               </span>
                             </td>
                             <td className="p-3 font-black text-brand-700">{a.score}/{a.total_questions ?? 'N/A'}</td>
                             <td className="p-3">
                               <div className="flex flex-col">
-                                <span className={`text-sm font-black ${(a.attention_score || 0) < 70 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                                <span className={`text-sm font-black ${(a.attention_score || 0) < 70 ? 'text-foreground' : 'text-foreground'}`}>
                                   {Number(a.attention_score || 0).toFixed(2)}%
                                 </span>
                                 <div className="w-16 h-1.5 bg-slate-100 rounded-full mt-1 overflow-hidden">
                                   <div
-                                    className={`h-full ${(a.attention_score || 0) < 70 ? 'bg-rose-500' : 'bg-emerald-500'}`}
+                                    className={`h-full ${(a.attention_score || 0) < 70 ? 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black' : 'bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]'}`}
                                     style={{ width: `${a.attention_score || 0}%` }}
                                   ></div>
                                 </div>
                               </div>
                             </td>
                             <td className="p-3">
-                              <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${a.status === 'submitted' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                              <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${a.status === 'submitted' ? 'bg-secondary text-foreground' : 'bg-secondary text-foreground'}`}>
                                 {a.status}
                               </span>
                             </td>
@@ -1082,7 +1082,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                               <button onClick={() => handleViewAttempt(a.id)} className="rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm">
                                 View
                               </button>
-                              <button onClick={() => requestDeleteAttempt(a)} className="rounded-md bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-600 hover:bg-rose-100 transition-colors">
+                              <button onClick={() => requestDeleteAttempt(a)} className="rounded-md bg-secondary px-2.5 py-1 text-xs font-bold text-foreground hover:bg-secondary transition-colors">
                                 Reset
                               </button>
                             </td>
@@ -1112,7 +1112,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
             <div className="rounded-xl border bg-white p-4"><p className="text-xs text-slate-500">Questions</p><p className="text-2xl font-bold">{analytics.totals.total_questions || 0}</p></div>
             <div className="rounded-xl border bg-white p-4"><p className="text-xs text-slate-500">Attempts</p><p className="text-2xl font-bold">{analytics.totals.total_attempts || 0}</p></div>
             <div className="rounded-xl border bg-white p-4"><p className="text-xs text-slate-500">Average %</p><p className="text-2xl font-bold">{analytics.totals.avg_percentage || 0}%</p></div>
-            <div className="rounded-xl border bg-white p-4"><p className="text-xs text-slate-500">Avg. Attention</p><p className="text-2xl font-bold text-emerald-600">{analytics.totals.avg_attention || 0}%</p></div>
+            <div className="rounded-xl border bg-white p-4"><p className="text-xs text-slate-500">Avg. Attention</p><p className="text-2xl font-bold text-foreground">{analytics.totals.avg_attention || 0}%</p></div>
           </div>
           <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <h3 className="mb-6 font-extrabold text-slate-800 text-lg tracking-tight">Subject Performance</h3>
@@ -1125,13 +1125,13 @@ const AdminDashboard = ({ section = 'questions' }) => {
                         <p className="font-bold text-slate-700 text-sm">{stat.subject}</p>
                         <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{stat.attempts} Attempts</p>
                       </div>
-                      <span className={`font-black text-lg ${stat.avg_percentage >= 70 ? 'text-emerald-600' : stat.avg_percentage >= 40 ? 'text-amber-500' : 'text-rose-500'}`}>
+                      <span className={`font-black text-lg ${stat.avg_percentage >= 70 ? 'text-foreground' : stat.avg_percentage >= 40 ? 'text-foreground' : 'text-foreground'}`}>
                         {stat.avg_percentage}%
                       </span>
                     </div>
                     <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden border border-slate-200/50">
                       <div
-                        className={`h-2.5 rounded-full transition-all duration-1000 ease-out ${stat.avg_percentage >= 70 ? 'bg-emerald-500' : stat.avg_percentage >= 40 ? 'bg-amber-400' : 'bg-rose-500'}`}
+                        className={`h-2.5 rounded-full transition-all duration-1000 ease-out ${stat.avg_percentage >= 70 ? 'bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]' : stat.avg_percentage >= 40 ? 'bg-secondary text-foreground' : 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black'}`}
                         style={{ width: `${stat.avg_percentage}%` }}
                       ></div>
                     </div>
@@ -1182,7 +1182,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
           <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
               <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                <span className={`inline-block w-2.5 h-2.5 rounded-full ${siteStatus === 'on' ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`}></span>
+                <span className={`inline-block w-2.5 h-2.5 rounded-full ${siteStatus === 'on' ? 'bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] animate-pulse' : 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black'}`}></span>
                 Site Accessibility Status
               </h3>
               <p className="text-sm text-slate-500">
@@ -1194,13 +1194,13 @@ const AdminDashboard = ({ section = 'questions' }) => {
             <div className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-lg border">
               <button
                 onClick={() => toggleSiteStatus('on')}
-                className={`px-4 py-2 text-sm font-bold rounded-md transition-all ${siteStatus === 'on' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+                className={`px-4 py-2 text-sm font-bold rounded-md transition-all ${siteStatus === 'on' ? 'bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
               >
                 LIVE (ON)
               </button>
               <button
                 onClick={() => toggleSiteStatus('off')}
-                className={`px-4 py-2 text-sm font-bold rounded-md transition-all ${siteStatus === 'off' ? 'bg-rose-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+                className={`px-4 py-2 text-sm font-bold rounded-md transition-all ${siteStatus === 'off' ? 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
               >
                 OFFLINE
               </button>
@@ -1245,7 +1245,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                            {t.phase2_name && <><br /><span className="text-slate-400">{t.phase2_name}: {t.technical_duration}m</span></>}
                          </td>
                         <td className="p-3">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${t.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${t.status === 'active' ? 'bg-secondary text-foreground' : 'bg-slate-100 text-slate-500'}`}>
                             {t.status}
                           </span>
                         </td>
@@ -1277,7 +1277,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                                 }
                               }
                             }}
-                            className="rounded bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-600 hover:bg-rose-100 transition-all"
+                            className="rounded bg-secondary px-2.5 py-1 text-xs font-bold text-foreground hover:bg-secondary transition-all"
                           >
                             Delete
                           </button>
@@ -1439,7 +1439,7 @@ const AdminDashboard = ({ section = 'questions' }) => {
                     <button
                       type="button"
                       onClick={() => setTestPhases(testPhases.filter((_, i) => i !== idx))}
-                      className="flex-shrink-0 rounded bg-rose-50 px-2 py-1 text-xs font-bold text-rose-500 hover:bg-rose-100 transition-all"
+                      className="flex-shrink-0 rounded bg-secondary px-2 py-1 text-xs font-bold text-foreground hover:bg-secondary transition-all"
                     >
                       ✕
                     </button>

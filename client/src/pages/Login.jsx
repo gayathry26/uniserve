@@ -51,7 +51,7 @@ export function Login({ portal = 'student' }) {
       features: [
         {
           title: 'Unrestricted Page Access',
-          desc: 'Automatic bypass and full visibility across all 20 Uniserve modules and management screens.',
+          desc: 'Automatic bypass and full visibility across all 20 CampusCorp modules and management screens.',
           icon: ShieldAlert,
         },
         {
@@ -81,7 +81,7 @@ export function Login({ portal = 'student' }) {
       key: 'student',
       title: 'Student Placement Portal',
       badge: 'Student Direct Access',
-      tagline: 'Launch your high-impact corporate career through Uniserve.',
+      tagline: 'Launch your high-impact corporate career through CampusCorp.',
       description:
         'Unified career management ecosystem connecting undergraduate & postgraduate students with elite global recruiters, mock assessments, and automated eligibility clearance.',
       defaultUsername: 'student.cse1@college.edu',
@@ -242,9 +242,9 @@ export function Login({ portal = 'student' }) {
   if (initialLoading || loading) {
     return (
       <UniserveLoader
-        title="UNISERVE"
+        title="CampusCorp"
         subtitle={config.title}
-        status={loading ? 'Authenticating with Uniserve Secure Gate...' : 'Loading Uniserve Portal...'}
+        status={loading ? 'Authenticating with CampusCorp Secure Gate...' : 'Loading CampusCorp Portal...'}
       />
     );
   }
@@ -268,17 +268,22 @@ export function Login({ portal = 'student' }) {
         {/* Top Header: Brand Logo & Portal Badge */}
         <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-white p-1.5 shadow-xl flex items-center justify-center border border-slate-200">
+            <div className="w-12 h-12 rounded-2xl bg-white dark:bg-black p-1 shadow-xl flex items-center justify-center border border-slate-200 dark:border-neutral-800 overflow-hidden">
               <img
-                src="/logo.jpeg"
-                alt="Uniserve Logo"
-                className="w-full h-full object-contain"
+                src="/logo-light.jpeg"
+                alt="CampusCorp Logo"
+                className="w-full h-full object-contain dark:hidden"
+              />
+              <img
+                src="/logo-dark.jpeg"
+                alt="CampusCorp Logo"
+                className="w-full h-full object-contain hidden dark:block"
               />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black tracking-wider text-white">
-                  UNISERVE
+                  CampusCorp
                 </span>
                 <span
                   className="w-2 h-2 rounded-full inline-block"
@@ -286,7 +291,7 @@ export function Login({ portal = 'student' }) {
                 />
               </div>
               <p className="text-[11px] font-semibold text-slate-400 tracking-wide">
-                University Career & Placement Governance
+                IT Career Hub & Placement Governance
               </p>
             </div>
           </div>
@@ -375,15 +380,15 @@ export function Login({ portal = 'student' }) {
         <div className="relative z-10 pt-6 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2 text-slate-400">
             <span className="font-semibold text-[11px] uppercase tracking-wider">
-              Uniserve Routes:
+              CampusCorp Routes:
             </span>
             <div className="flex flex-wrap items-center gap-1.5">
               <Link
                 to="/superadmin"
                 className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${
                   currentPortal === 'superadmin'
-                    ? 'bg-amber-400 text-slate-950 shadow-xs'
-                    : 'bg-amber-950/40 text-amber-300 border border-amber-500/30 hover:bg-amber-900/60'
+                    ? 'bg-neutral-200 text-neutral-900 font-black shadow-xs'
+                    : 'bg-neutral-800 text-neutral-300 border border-neutral-700 hover:bg-neutral-700'
                 }`}
               >
                 👑 Super Admin
@@ -432,7 +437,7 @@ export function Login({ portal = 'student' }) {
           </div>
 
           <div className="text-[11px] text-slate-500 font-medium">
-            Uniserve v2.4 Enterprise
+            CampusCorp IT Career Hub
           </div>
         </div>
       </div>
@@ -440,12 +445,12 @@ export function Login({ portal = 'student' }) {
       {/* ========================================================================= */}
       {/* RIGHT SEGMENT: User Name and Password - NOTHING ELSE                      */}
       {/* ========================================================================= */}
-      <div className="w-full lg:w-1/2 xl:w-5/12 bg-white flex flex-col justify-center items-center p-6 sm:p-12 lg:p-16 text-slate-900">
+      <div className="w-full lg:w-1/2 xl:w-5/12 bg-card text-card-foreground border-l border-border flex flex-col justify-center items-center p-6 sm:p-12 lg:p-16 transition-colors">
         <div className="w-full max-w-sm">
           {/* Header */}
           <div className="mb-8 text-center sm:text-left">
             <span
-              className="inline-block text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-md mb-2"
+              className="inline-block text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-md mb-2 border border-border"
               style={{
                 backgroundColor: currentTheme.primaryLight,
                 color: currentTheme.primaryText,
@@ -453,18 +458,18 @@ export function Login({ portal = 'student' }) {
             >
               Secure Portal Authentication
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
               Sign In
             </h1>
-            <p className="mt-1.5 text-xs text-slate-500">
+            <p className="mt-1.5 text-xs text-muted-foreground">
               Enter your username and password to proceed.
             </p>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-5 p-3 rounded-xl bg-rose-50 text-rose-700 text-xs border border-rose-200 font-medium flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-rose-600 shrink-0" />
+            <div className="mb-5 p-3 rounded-xl bg-destructive/10 text-destructive text-xs border border-destructive/30 font-medium flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-destructive shrink-0" />
               <span>{error}</span>
             </div>
           )}
@@ -473,11 +478,11 @@ export function Login({ portal = 'student' }) {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* User Name */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold text-foreground mb-1.5">
                 User Name
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
                   <User className="w-4 h-4" />
                 </div>
                 <input
@@ -487,29 +492,18 @@ export function Login({ portal = 'student' }) {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Username or University Email"
                   autoComplete="username"
-                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all bg-slate-50/50 hover:bg-white"
-                  style={{
-                    borderColor: '#e2e8f0',
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = currentTheme.primary;
-                    e.target.style.boxShadow = `0 0 0 3px ${currentTheme.glow}`;
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#e2e8f0';
-                    e.target.style.boxShadow = 'none';
-                  }}
+                  className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-input text-xs font-medium text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all bg-background"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold text-foreground mb-1.5">
                 Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -519,23 +513,12 @@ export function Login({ portal = 'student' }) {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter Password"
                   autoComplete="current-password"
-                  className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 transition-all bg-slate-50/50 hover:bg-white"
-                  style={{
-                    borderColor: '#e2e8f0',
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = currentTheme.primary;
-                    e.target.style.boxShadow = `0 0 0 3px ${currentTheme.glow}`;
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#e2e8f0';
-                    e.target.style.boxShadow = 'none';
-                  }}
+                  className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-input text-xs font-medium text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all bg-background"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                 >
                   {showPassword ? (
                     <EyeOff className="w-4 h-4" />
@@ -551,13 +534,9 @@ export function Login({ portal = 'student' }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 rounded-xl text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.99] disabled:opacity-70"
-                style={{
-                  backgroundColor: currentTheme.primary,
-                  boxShadow: `0 4px 14px 0 ${currentTheme.glow}`,
-                }}
+                className="w-full py-3 px-4 rounded-xl text-[#fafafa] dark:text-[#0a0a0a] font-bold text-xs flex items-center justify-center gap-2 shadow-xs hover:shadow-md transition-all cursor-pointer active:scale-[0.99] disabled:opacity-70 bg-[#171717] hover:bg-[#262626] dark:bg-[#fafafa] dark:hover:bg-[#e5e5e5]"
               >
-                <span>Sign In to Uniserve</span>
+                <span>Sign In to CampusCorp</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>

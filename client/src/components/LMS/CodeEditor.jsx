@@ -164,7 +164,7 @@ const CodeEditor = ({ value = '', onChange, language = 'python', readOnly = fals
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={() => setShowScratch(!showScratch)}
-            className="text-[10px] uppercase font-bold text-teal-400 bg-teal-400/10 px-2 py-1 rounded"
+            className="text-[10px] uppercase font-bold text-foreground bg-secondary text-foreground px-2 py-1 rounded"
           >
             {showScratch ? '✕ Close Scratch' : '✎ Scratch Pad'}
           </button>

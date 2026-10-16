@@ -29,6 +29,7 @@ const reportCtrl = require('../controllers/reportController');
 const adminCtrl = require('../controllers/adminController');
 const aiCtrl = require('../controllers/aiController');
 const rolePermCtrl = require('../controllers/rolePermissionController');
+const skillAnalyzerCtrl = require('../controllers/skillAnalyzerController');
 
 // 1. Authentication & Role Switcher
 router.post('/auth/login', authCtrl.login);
@@ -179,5 +180,24 @@ router.post('/ai/ask', authenticateToken, aiCtrl.askDbAssistant);
 router.post('/ai/parse-resume', authenticateToken, aiCtrl.parseResume);
 router.post('/ai/match-job', authenticateToken, aiCtrl.matchJob);
 router.post('/ai/interview-feedback', authenticateToken, aiCtrl.evaluateInterviewAnswer);
+
+// 21. Skill Analyzer & Career Role Recommendations
+router.get('/skills', skillAnalyzerCtrl.getSkills);
+router.get('/skills/categories', skillAnalyzerCtrl.getCategories);
+router.get('/student/skills', authenticateToken, skillAnalyzerCtrl.getStudentSkills);
+router.put('/student/skills', authenticateToken, skillAnalyzerCtrl.saveStudentSkills);
+router.post('/skill-analyzer/analyze', authenticateToken, skillAnalyzerCtrl.analyzeSkills);
+router.get('/skill-analyzer/history', authenticateToken, skillAnalyzerCtrl.getAnalysisHistory);
+router.get('/skill-analyzer/roadmap/:roleId', authenticateToken, skillAnalyzerCtrl.getRoadmap);
+router.patch('/skill-analyzer/roadmap/progress', authenticateToken, skillAnalyzerCtrl.updateRoadmapProgress);
+router.get('/skill-analyzer/assessment/quiz/:topic', authenticateToken, skillAnalyzerCtrl.getAssessmentQuiz);
+router.post('/skill-analyzer/assessment/submit', authenticateToken, skillAnalyzerCtrl.submitAssessment);
+
+// 21b. Admin Skill Catalogue & Role Requirements Governance
+router.get('/admin/skill-catalogue', authenticateToken, authorize(['SUPER_ADMIN', 'ADMIN', 'TPO_OFFICER']), skillAnalyzerCtrl.getAdminCatalogue);
+router.put('/admin/skill-catalogue/:id', authenticateToken, authorize(['SUPER_ADMIN', 'ADMIN', 'TPO_OFFICER']), skillAnalyzerCtrl.updateAdminSkill);
+router.post('/admin/skill-catalogue', authenticateToken, authorize(['SUPER_ADMIN', 'ADMIN', 'TPO_OFFICER']), skillAnalyzerCtrl.createAdminSkill);
+router.put('/admin/role-requirements', authenticateToken, authorize(['SUPER_ADMIN', 'ADMIN', 'TPO_OFFICER']), skillAnalyzerCtrl.updateRoleRequirement);
+router.post('/admin/verify-skill', authenticateToken, authorize(['SUPER_ADMIN', 'ADMIN', 'TPO_OFFICER', 'FACULTY_COORDINATOR']), skillAnalyzerCtrl.verifyStudentSkill);
 
 module.exports = router;

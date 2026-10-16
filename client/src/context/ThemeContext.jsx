@@ -1,131 +1,44 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+export const LIGHT_CHART_COLORS = ['#171717', '#525252', '#737373', '#a1a1a1', '#d4d4d4'];
+export const DARK_CHART_COLORS = ['#fafafa', '#d4d4d4', '#a1a1a1', '#737373', '#525252'];
+
 export const THEMES = [
   {
-    id: 'blue',
-    name: 'Uniserve Blue',
-    tagline: 'Classic Academic Cobalt & Sapphire',
-    category: 'Institutional',
-    primary: '#2563eb', // blue-600
-    primaryHover: '#1d4ed8', // blue-700
-    primaryLight: '#eff6ff', // blue-50
-    primaryText: '#1d4ed8',
-    primaryBorder: '#bfdbfe', // blue-200
-    accent: '#38bdf8', // sky-400
-    gradientFrom: '#1e40af', // blue-800
-    gradientTo: '#4338ca', // indigo-700
-    glow: 'rgba(37, 99, 235, 0.35)',
-    badgeBg: 'bg-blue-50 text-blue-700 border-blue-200',
-    swatches: ['#1e40af', '#2563eb', '#60a5fa'],
-    accentRing: 'ring-blue-500/30',
+    id: 'monochrome',
+    name: 'Neutral Monochrome',
+    tagline: 'Minimalist Black, White & Neutral Gray',
+    category: 'Minimal',
+    primary: '#171717',
+    primaryHover: '#262626',
+    primaryLight: '#f5f5f5',
+    primaryText: '#0a0a0a',
+    primaryBorder: '#e5e5e5',
+    accent: '#737373',
+    gradientFrom: '#171717',
+    gradientTo: '#262626',
+    glow: 'rgba(0, 0, 0, 0.08)',
+    badgeBg: 'bg-neutral-100 text-neutral-900 border-neutral-300',
+    swatches: ['#0a0a0a', '#525252', '#a1a1a1'],
+    accentRing: 'ring-neutral-400/30',
   },
   {
-    id: 'emerald',
-    name: 'Emerald Horizon',
-    tagline: 'Deep Forest Green & Fresh Botanical Mint',
-    category: 'Growth & Nature',
-    primary: '#059669', // emerald-600
-    primaryHover: '#047857', // emerald-700
-    primaryLight: '#ecfdf5', // emerald-50
-    primaryText: '#047857',
-    primaryBorder: '#a7f3d0', // emerald-200
-    accent: '#34d399', // emerald-400
-    gradientFrom: '#064e3b', // emerald-900
-    gradientTo: '#0f766e', // teal-700
-    glow: 'rgba(5, 150, 105, 0.35)',
-    badgeBg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    swatches: ['#064e3b', '#059669', '#34d399'],
-    accentRing: 'ring-emerald-500/30',
-  },
-  {
-    id: 'violet',
-    name: 'Royal Violet',
-    tagline: 'Regal Amethyst Purple & Ultraviolet Hues',
-    category: 'Prestige & Innovation',
-    primary: '#7c3aed', // violet-600
-    primaryHover: '#6d28d9', // violet-700
-    primaryLight: '#f5f3ff', // violet-50
-    primaryText: '#6d28d9',
-    primaryBorder: '#ddd6fe', // violet-200
-    accent: '#c084fc', // purple-400
-    gradientFrom: '#581c87', // purple-900
-    gradientTo: '#7e22ce', // purple-700
-    glow: 'rgba(124, 58, 237, 0.35)',
-    badgeBg: 'bg-purple-50 text-purple-700 border-purple-200',
-    swatches: ['#581c87', '#7c3aed', '#c084fc'],
-    accentRing: 'ring-purple-500/30',
-  },
-  {
-    id: 'crimson',
-    name: 'Crimson Ruby',
-    tagline: 'Passionate Scarlet Red & Rose Highlights',
-    category: 'Bold & Dynamic',
-    primary: '#e11d48', // rose-600
-    primaryHover: '#be123c', // rose-700
-    primaryLight: '#fff1f2', // rose-50
-    primaryText: '#be123c',
-    primaryBorder: '#fecdd3', // rose-200
-    accent: '#fb7185', // rose-400
-    gradientFrom: '#881337', // rose-900
-    gradientTo: '#e11d48', // rose-600
-    glow: 'rgba(225, 29, 72, 0.35)',
-    badgeBg: 'bg-rose-50 text-rose-700 border-rose-200',
-    swatches: ['#881337', '#e11d48', '#fb7185'],
-    accentRing: 'ring-rose-500/30',
-  },
-  {
-    id: 'amber',
-    name: 'Amber Sunset',
-    tagline: 'Warm Radiant Honey Gold & Scorched Amber',
-    category: 'Warmth & Executive',
-    primary: '#d97706', // amber-600
-    primaryHover: '#b45309', // amber-700
-    primaryLight: '#fffbeb', // amber-50
-    primaryText: '#b45309',
-    primaryBorder: '#fde68a', // amber-200
-    accent: '#fbbf24', // amber-400
-    gradientFrom: '#78350f', // amber-900
-    gradientTo: '#ea580c', // orange-600
-    glow: 'rgba(217, 119, 6, 0.35)',
-    badgeBg: 'bg-amber-50 text-amber-700 border-amber-200',
-    swatches: ['#78350f', '#d97706', '#fcd34d'],
-    accentRing: 'ring-amber-500/30',
-  },
-  {
-    id: 'cyber',
-    name: 'Cyber Slate',
-    tagline: 'Futuristic Metallic Slate & Electric Cyan',
-    category: 'High-Tech Precision',
-    primary: '#0284c7', // sky-600
-    primaryHover: '#0369a1', // sky-700
-    primaryLight: '#f0f9ff', // sky-50
-    primaryText: '#0369a1',
-    primaryBorder: '#bae6fd', // sky-200
-    accent: '#38bdf8', // sky-400
-    gradientFrom: '#0f172a', // slate-900
-    gradientTo: '#0369a1', // sky-700
-    glow: 'rgba(2, 132, 199, 0.35)',
-    badgeBg: 'bg-sky-50 text-sky-700 border-sky-200',
-    swatches: ['#0f172a', '#0284c7', '#38bdf8'],
-    accentRing: 'ring-sky-500/30',
-  },
-  {
-    id: 'nordic',
-    name: 'Nordic Indigo',
-    tagline: 'Deep Midnight Sky & Radiant Periwinkle',
-    category: 'Minimalist Focus',
-    primary: '#4338ca', // indigo-700
-    primaryHover: '#3730a3', // indigo-800
-    primaryLight: '#eef2ff', // indigo-50
-    primaryText: '#3730a3',
-    primaryBorder: '#c7d2fe', // indigo-200
-    accent: '#818cf8', // indigo-400
-    gradientFrom: '#1e1b4b', // indigo-950
-    gradientTo: '#4338ca', // indigo-700
-    glow: 'rgba(67, 56, 202, 0.35)',
-    badgeBg: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    swatches: ['#1e1b4b', '#4338ca', '#818cf8'],
-    accentRing: 'ring-indigo-500/30',
+    id: 'charcoal',
+    name: 'Charcoal Minimal',
+    tagline: 'Refined Dark Carbon & Pure White',
+    category: 'Minimal',
+    primary: '#171717',
+    primaryHover: '#262626',
+    primaryLight: '#f5f5f5',
+    primaryText: '#0a0a0a',
+    primaryBorder: '#e5e5e5',
+    accent: '#525252',
+    gradientFrom: '#171717',
+    gradientTo: '#262626',
+    glow: 'rgba(0, 0, 0, 0.08)',
+    badgeBg: 'bg-neutral-100 text-neutral-900 border-neutral-300',
+    swatches: ['#171717', '#404040', '#737373'],
+    accentRing: 'ring-neutral-400/30',
   },
 ];
 
@@ -134,9 +47,19 @@ const ThemeContext = createContext(null);
 export function ThemeProvider({ children }) {
   const [currentThemeId, setCurrentThemeId] = useState(() => {
     try {
-      return localStorage.getItem('uniserve_theme') || 'blue';
+      return localStorage.getItem('campuscorp_theme') || 'monochrome';
     } catch {
-      return 'blue';
+      return 'monochrome';
+    }
+  });
+
+  const [isDark, setIsDark] = useState(() => {
+    try {
+      const saved = localStorage.getItem('campuscorp_theme_mode');
+      if (saved) return saved === 'dark';
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch {
+      return false;
     }
   });
 
@@ -144,23 +67,37 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem('uniserve_theme', currentTheme.id);
+      localStorage.setItem('campuscorp_theme', currentTheme.id);
     } catch (e) {
       console.warn('Could not persist theme to localStorage', e);
     }
 
     const root = document.documentElement;
     root.setAttribute('data-theme', currentTheme.id);
-    root.style.setProperty('--theme-primary', currentTheme.primary);
-    root.style.setProperty('--theme-primary-hover', currentTheme.primaryHover);
-    root.style.setProperty('--theme-primary-light', currentTheme.primaryLight);
-    root.style.setProperty('--theme-primary-text', currentTheme.primaryText);
-    root.style.setProperty('--theme-primary-border', currentTheme.primaryBorder);
-    root.style.setProperty('--theme-gradient-from', currentTheme.gradientFrom);
-    root.style.setProperty('--theme-gradient-to', currentTheme.gradientTo);
-    root.style.setProperty('--theme-accent', currentTheme.accent);
-    root.style.setProperty('--theme-glow', currentTheme.glow);
-  }, [currentTheme]);
+    root.style.setProperty('--theme-primary', isDark ? '#fafafa' : '#171717');
+    root.style.setProperty('--theme-primary-hover', isDark ? '#e5e5e5' : '#262626');
+    root.style.setProperty('--theme-primary-light', isDark ? '#262626' : '#f5f5f5');
+    root.style.setProperty('--theme-primary-text', isDark ? '#fafafa' : '#0a0a0a');
+    root.style.setProperty('--theme-primary-border', isDark ? 'rgba(255,255,255,0.10)' : '#e5e5e5');
+    root.style.setProperty('--theme-gradient-from', '#171717');
+    root.style.setProperty('--theme-gradient-to', '#262626');
+    root.style.setProperty('--theme-accent', isDark ? '#a1a1a1' : '#737373');
+    root.style.setProperty('--theme-glow', isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.08)');
+  }, [currentTheme, isDark]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('campuscorp_theme_mode', isDark ? 'dark' : 'light');
+    } catch (e) {
+      console.warn('Could not persist theme mode to localStorage', e);
+    }
+
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDark]);
 
   const setTheme = (themeId) => {
     if (THEMES.some((t) => t.id === themeId)) {
@@ -168,12 +105,27 @@ export function ThemeProvider({ children }) {
     }
   };
 
+  const toggleDarkMode = () => {
+    setIsDark((prev) => !prev);
+  };
+
+  const setDarkMode = (val) => {
+    setIsDark(Boolean(val));
+  };
+
+  const chartColors = isDark ? DARK_CHART_COLORS : LIGHT_CHART_COLORS;
+
   return (
     <ThemeContext.Provider
       value={{
         currentTheme,
         setTheme,
         themes: THEMES,
+        isDark,
+        darkMode: isDark,
+        toggleDarkMode,
+        setDarkMode,
+        chartColors,
       }}
     >
       {children}

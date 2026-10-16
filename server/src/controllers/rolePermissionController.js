@@ -1,9 +1,11 @@
 const { queryCommon } = require('../config/db');
 const { logAuditEvent } = require('../services/auditService');
 
-// Master list of all 21 Uniserve application pages
+// Master list of all CampusCorp application pages
 const ALL_PAGES = [
   { path: '/', label: 'Placement Dashboard', category: 'Core & Overview' },
+  { path: '/domains', label: 'Explore Career Domains', category: 'Career Exploration' },
+  { path: '/compare', label: 'Compare Career Roles', category: 'Career Exploration' },
   { path: '/students', label: 'Students Roster', category: 'Student Management' },
   { path: '/profile', label: 'My Student Profile', category: 'Student Management' },
   { path: '/companies', label: 'Hiring Companies', category: 'Recruitment & Drives' },
@@ -42,6 +44,8 @@ const DEFAULT_PERMISSIONS = {
   SUPER_ADMIN: ALL_PAGE_PATHS,
   TPO_OFFICER: [
     '/',
+    '/domains',
+    '/compare',
     '/students',
     '/companies',
     '/jobs',
@@ -62,6 +66,8 @@ const DEFAULT_PERMISSIONS = {
     '/settings',
   ],
   STUDENT: [
+    '/domains',
+    '/compare',
     '/profile',
     '/companies',
     '/jobs',
@@ -81,6 +87,8 @@ const DEFAULT_PERMISSIONS = {
   ],
   FACULTY_COORDINATOR: [
     '/',
+    '/domains',
+    '/compare',
     '/students',
     '/companies',
     '/jobs',
@@ -101,6 +109,8 @@ const DEFAULT_PERMISSIONS = {
   ],
   RECRUITER: [
     '/',
+    '/domains',
+    '/compare',
     '/jobs',
     '/drives',
     '/applications',
@@ -113,6 +123,8 @@ const DEFAULT_PERMISSIONS = {
   ],
   MANAGEMENT: [
     '/',
+    '/domains',
+    '/compare',
     '/students',
     '/companies',
     '/jobs',
@@ -125,6 +137,8 @@ const DEFAULT_PERMISSIONS = {
     '/settings',
   ],
   ALUMNI: [
+    '/domains',
+    '/compare',
     '/alumni',
     '/jobs',
     '/policies',
@@ -166,6 +180,14 @@ async function getRolePermissions(req, res, next) {
       userRoles: USER_ROLES,
     });
   } catch (err) {
+    if (err.code === 'ECONNREFUSED' || err.message?.includes('ECONNREFUSED')) {
+      return res.json({
+        success: true,
+        permissions: DEFAULT_PERMISSIONS,
+        allPages: ALL_PAGES,
+        userRoles: USER_ROLES,
+      });
+    }
     next(err);
   }
 }
@@ -186,23 +208,23 @@ async function getCurrentUserPermissions(req, res, next) {
       });
     }
 
-    const rows = await queryCommon(
-      'SELECT allowed_pages FROM role_permissions WHERE role_name = ?',
-      [roleName]
-    );
-
     let allowedPages = DEFAULT_PERMISSIONS[roleName] || [];
-    if (rows && rows.length > 0) {
-      try {
+
+    try {
+      const rows = await queryCommon(
+        'SELECT allowed_pages FROM role_permissions WHERE role_name = ?',
+        [roleName]
+      );
+
+      if (rows && rows.length > 0) {
         const parsed = typeof rows[0].allowed_pages === 'string'
           ? JSON.parse(rows[0].allowed_pages)
           : rows[0].allowed_pages;
-        if (Array.isArray(parsed)) {
-          allowedPages = parsed;
-        }
-      } catch (e) {
-        console.warn(`[Permissions] Error parsing allowed_pages for ${roleName}:`, e.message);
+        allowedPages = Array.isArray(parsed) ? parsed : [];
       }
+    } catch (dbErr) {
+      // offline fallback to default permissions
+      allowedPages = DEFAULT_PERMISSIONS[roleName] || [];
     }
 
     res.json({

@@ -84,7 +84,7 @@ const Login = () => {
       )}
 
       {/* Left Section - Showcase Branding (Hidden on Mobile) */}
-      <div className="relative hidden w-1/2 flex-col justify-between bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 p-16 text-white lg:flex overflow-hidden border-r border-neutral-800">
+      <div className="relative hidden w-1/2 flex-col justify-between bg-neutral-100 dark:bg-neutral-900 border border-border text-foreground p-16 text-white lg:flex overflow-hidden border-r border-neutral-800">
         {/* Subtle Decorative Neutral Glow */}
         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] rounded-full bg-white/5 blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-neutral-800/10 blur-3xl pointer-events-none"></div>
@@ -136,8 +136,8 @@ const Login = () => {
             </div>
 
             {error && (
-              <div className="mb-5 flex items-center gap-2 rounded-2xl bg-rose-50 border border-rose-200/60 p-4 text-sm text-rose-700">
-                <svg className="h-5 w-5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="mb-5 flex items-center gap-2 rounded-2xl bg-secondary border border-border p-4 text-sm text-foreground">
+                <svg className="h-5 w-5 text-foreground shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <p className="font-semibold leading-snug">{error}</p>

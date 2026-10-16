@@ -59,17 +59,17 @@ export function ApplicantReviewModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4 text-xs max-h-[75vh] overflow-y-auto pr-1">
         {/* Candidate Profile Summary */}
-        <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
+        <div className="p-3.5 bg-secondary rounded-xl border border-border space-y-2">
+          <div className="flex items-center justify-between pb-1.5 border-b border-border">
             <div>
-              <span className="font-bold text-slate-900 text-sm">
+              <span className="font-bold text-foreground text-sm">
                 {applicant.first_name} {applicant.last_name}
               </span>
-              <span className="font-mono text-slate-500 ml-2">({applicant.register_number})</span>
+              <span className="font-mono text-muted-foreground ml-2">({applicant.register_number})</span>
             </div>
             <div className="flex items-center gap-1.5">
               <StatusBadge status={applicant.application_status} />
-              <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+              <span className="text-[10px] font-bold text-foreground bg-card px-2 py-0.5 rounded border border-border">
                 {applicant.eligibility_status || 'ELIGIBLE'}
               </span>
             </div>
@@ -77,43 +77,43 @@ export function ApplicantReviewModal({
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1">
             <div>
-              <span className="text-slate-400 block text-[10px]">Department & Batch</span>
-              <strong className="text-slate-800">
+              <span className="text-muted-foreground block text-[10px]">Department & Batch</span>
+              <strong className="text-foreground">
                 {applicant.department_code} • {applicant.academic_year || applicant.batch}
               </strong>
             </div>
             <div>
-              <span className="text-slate-400 block text-[10px]">Current CGPA</span>
-              <strong className="text-emerald-700 font-bold">{applicant.cgpa}</strong>
+              <span className="text-muted-foreground block text-[10px]">Current CGPA</span>
+              <strong className="text-foreground font-bold">{applicant.cgpa}</strong>
             </div>
             <div>
-              <span className="text-slate-400 block text-[10px]">Active Backlogs</span>
-              <strong className={applicant.active_backlogs > 0 ? 'text-rose-600 font-bold' : 'text-slate-800'}>
+              <span className="text-muted-foreground block text-[10px]">Active Backlogs</span>
+              <strong className="text-foreground font-bold">
                 {applicant.active_backlogs || 0} Backlog(s)
               </strong>
             </div>
             <div>
-              <span className="text-slate-400 block text-[10px]">Applied Date</span>
-              <strong className="text-slate-800">
+              <span className="text-muted-foreground block text-[10px]">Applied Date</span>
+              <strong className="text-foreground">
                 {applicant.applied_at ? new Date(applicant.applied_at).toLocaleDateString() : 'N/A'}
               </strong>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 pt-1.5 text-[11px] text-slate-600 border-t border-slate-200/60">
-            <span>Email: <strong className="text-slate-800">{applicant.email}</strong></span>
-            <span>Phone: <strong className="text-slate-800">{applicant.phone || 'N/A'}</strong></span>
+          <div className="flex items-center gap-4 pt-1.5 text-[11px] text-muted-foreground border-t border-border">
+            <span>Email: <strong className="text-foreground">{applicant.email}</strong></span>
+            <span>Phone: <strong className="text-foreground">{applicant.phone || 'N/A'}</strong></span>
           </div>
         </div>
 
         {/* Status & Eligibility Controls */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white p-3.5 rounded-xl border border-slate-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-card p-3.5 rounded-xl border border-border">
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Eligibility Clearance Status</label>
+            <label className="block font-semibold text-foreground mb-1">Eligibility Clearance Status</label>
             <select
               value={eligibilityStatus}
               onChange={(e) => setEligibilityStatus(e.target.value)}
-              className="w-full p-2 border border-slate-200 rounded-lg text-xs bg-white font-medium"
+              className="w-full p-2 border border-border rounded-lg text-xs bg-secondary text-foreground font-medium"
             >
               <option value="ELIGIBLE">ELIGIBLE (Approved by Placement Officer)</option>
               <option value="PENDING_REVIEW">PENDING_REVIEW (Under Verification)</option>
@@ -123,11 +123,11 @@ export function ApplicantReviewModal({
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Application Pipeline Stage</label>
+            <label className="block font-semibold text-foreground mb-1">Application Pipeline Stage</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full p-2 border border-slate-200 rounded-lg text-xs bg-white font-medium"
+              className="w-full p-2 border border-border rounded-lg text-xs bg-secondary text-foreground font-medium"
             >
               <option value="APPLIED">APPLIED (New Submission)</option>
               <option value="SHORTLISTED">SHORTLISTED (Advanced to rounds)</option>
@@ -141,26 +141,26 @@ export function ApplicantReviewModal({
 
           {eligibilityStatus === 'INELIGIBLE' && (
             <div className="sm:col-span-2">
-              <label className="block font-semibold text-rose-700 mb-1">Ineligibility Reason / Clause</label>
+              <label className="block font-semibold text-foreground mb-1">Ineligibility Reason / Clause</label>
               <input
                 type="text"
                 value={ineligibilityReason}
                 onChange={(e) => setIneligibilityReason(e.target.value)}
                 placeholder="e.g. Backlog threshold exceeded or CGPA below cutoff"
-                className="w-full p-2 border border-rose-200 bg-rose-50/50 rounded-lg text-xs"
+                className="w-full p-2 border border-border bg-secondary text-foreground rounded-lg text-xs"
               />
             </div>
           )}
         </div>
 
         {/* Selection Round & Final Result */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white p-3.5 rounded-xl border border-slate-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-card p-3.5 rounded-xl border border-border">
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Current Active Round</label>
+            <label className="block font-semibold text-foreground mb-1">Current Active Round</label>
             <select
               value={roundNumber}
               onChange={(e) => setRoundNumber(e.target.value)}
-              className="w-full p-2 border border-slate-200 rounded-lg text-xs bg-white font-medium"
+              className="w-full p-2 border border-border rounded-lg text-xs bg-secondary text-foreground font-medium"
             >
               {rounds.length > 0 ? (
                 rounds.map((rnd) => (
@@ -180,11 +180,11 @@ export function ApplicantReviewModal({
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Final Result Verdict</label>
+            <label className="block font-semibold text-foreground mb-1">Final Result Verdict</label>
             <select
               value={finalResult}
               onChange={(e) => setFinalResult(e.target.value)}
-              className="w-full p-2 border border-slate-200 rounded-lg text-xs bg-white font-medium"
+              className="w-full p-2 border border-border rounded-lg text-xs bg-secondary text-foreground font-medium"
             >
               <option value="PENDING">PENDING (In Progress)</option>
               <option value="SELECTED">SELECTED (Final Offer Cleared)</option>
@@ -195,30 +195,30 @@ export function ApplicantReviewModal({
         </div>
 
         {/* Assessment / Interview Scheduling */}
-        <div className="p-3.5 bg-blue-50/40 rounded-xl border border-blue-200/70 space-y-2.5">
-          <h4 className="font-bold text-blue-950 text-xs flex items-center gap-1.5">
-            <CalendarDays className="w-4 h-4 text-blue-600" /> Assessment / Interview Scheduling
+        <div className="p-3.5 bg-secondary rounded-xl border border-border space-y-2.5">
+          <h4 className="font-bold text-foreground text-xs flex items-center gap-1.5">
+            <CalendarDays className="w-4 h-4 text-foreground" /> Assessment / Interview Scheduling
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Scheduled Date & Time</label>
+              <label className="block font-semibold text-foreground mb-1">Scheduled Date & Time</label>
               <input
                 type="datetime-local"
                 value={scheduledAt}
                 onChange={(e) => setScheduledAt(e.target.value)}
-                className="w-full p-2 border border-slate-200 bg-white rounded-lg text-xs"
+                className="w-full p-2 border border-border bg-background text-foreground rounded-lg text-xs"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Venue / Online Meet Link</label>
+              <label className="block font-semibold text-foreground mb-1">Venue / Online Meet Link</label>
               <input
                 type="text"
                 value={venueOrLink}
                 onChange={(e) => setVenueOrLink(e.target.value)}
                 placeholder="e.g. Placement Block Lab 2 or WebRTC Room #104"
-                className="w-full p-2 border border-slate-200 bg-white rounded-lg text-xs"
+                className="w-full p-2 border border-border bg-background text-foreground rounded-lg text-xs"
               />
             </div>
           </div>
@@ -226,8 +226,8 @@ export function ApplicantReviewModal({
 
         {/* Interview Feedback & Evaluator Remarks */}
         <div>
-          <label className="block font-semibold text-slate-700 mb-1 flex items-center gap-1.5">
-            <MessageSquare className="w-3.5 h-3.5 text-slate-500" />
+          <label className="block font-semibold text-foreground mb-1 flex items-center gap-1.5">
+            <MessageSquare className="w-3.5 h-3.5 text-muted-foreground" />
             Interview Feedback & Evaluator Remarks (Visible in candidate portal)
           </label>
           <textarea
@@ -235,28 +235,24 @@ export function ApplicantReviewModal({
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
             placeholder="Feedback on problem solving, coding proficiency, domain depth, communication, or next steps..."
-            className="w-full p-2.5 border border-slate-200 rounded-lg text-xs"
+            className="w-full p-2.5 border border-border bg-background text-foreground rounded-lg text-xs"
           />
         </div>
 
         {/* Modal Submit Actions */}
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">
           <button
             type="button"
             onClick={onClose}
             disabled={saving}
-            className="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-50 font-semibold cursor-pointer text-xs"
+            className="px-4 py-2 border border-border rounded-xl text-foreground hover:bg-secondary font-semibold cursor-pointer text-xs"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={saving}
-            className={`inline-flex items-center gap-1.5 px-5 py-2 text-white font-bold rounded-xl shadow-md transition-all text-xs ${
-              saving
-                ? 'bg-blue-400 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700 cursor-pointer shadow-blue-500/20 active:scale-95'
-            }`}
+            className="inline-flex items-center gap-1.5 px-5 py-2 bg-[#171717] hover:bg-[#262626] text-[#fafafa] dark:bg-[#fafafa] dark:hover:bg-[#e5e5e5] dark:text-[#0a0a0a] font-bold rounded-xl shadow-xs transition-all text-xs cursor-pointer"
           >
             {saving ? 'Saving...' : 'Save & Notify Student'}
           </button>

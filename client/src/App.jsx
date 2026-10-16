@@ -30,6 +30,9 @@ import { Grievances } from './pages/Grievances';
 import { AIAssistant } from './pages/AIAssistant';
 import { Admin } from './pages/Admin';
 import { Settings } from './pages/Settings';
+import { Domains } from './pages/Domains';
+import { CompareRoles } from './pages/CompareRoles';
+import { SkillAnalyzer } from './pages/SkillAnalyzer';
 import ExamScreen from './pages/LMS/ExamScreen';
 import { InterviewRoomPage } from './pages/videocall/interview';
 
@@ -47,7 +50,7 @@ function Layout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans transition-colors duration-200">
       <Navbar />
       <div className="flex flex-1">
         <Sidebar />
@@ -66,7 +69,7 @@ function ProtectedRoute({ children, path }) {
   const currentPath = path || location.pathname;
 
   if (loading) {
-    return <UniserveLoader title="UNISERVE" subtitle="Verifying Security Gate..." />;
+    return <UniserveLoader title="CampusCorp" subtitle="Verifying Security Gate..." />;
   }
   if (!user) return <Navigate to="/login" replace />;
 
@@ -75,19 +78,18 @@ function ProtectedRoute({ children, path }) {
   if (user.roleName !== 'SUPER_ADMIN' && !canAccessPage(user.roleName, currentPath)) {
     return (
       <Layout>
-        <div className="bg-white rounded-2xl p-8 border border-slate-200 text-center max-w-lg mx-auto my-12 shadow-xs">
-          <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 border border-amber-200">
+        <div className="bg-card text-card-foreground rounded-2xl p-8 border border-border text-center max-w-lg mx-auto my-12 shadow-sm">
+          <div className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center mx-auto mb-4 border border-border">
             <ShieldAlert className="w-7 h-7" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-1">Page Access Restricted</h2>
-          <p className="text-xs text-slate-500 mb-6 leading-relaxed">
-            The page <strong className="font-mono text-slate-800">{currentPath}</strong> is currently not ticked in the Super Admin Page Permissions Matrix for your role (<strong>{user.roleName}</strong>).
+          <h2 className="text-xl font-bold text-foreground mb-1">Page Access Restricted</h2>
+          <p className="text-xs text-muted-foreground mb-6 leading-relaxed">
+            The page <strong className="font-mono text-foreground">{currentPath}</strong> is currently not ticked in the Super Admin Page Permissions Matrix for your role (<strong>{user.roleName}</strong>).
           </p>
           <div className="flex items-center justify-center gap-3">
             <Link
               to={user.roleName === 'STUDENT' ? '/profile' : '/'}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white text-xs font-bold shadow-xs transition-transform active:scale-95"
-              style={{ backgroundColor: 'var(--theme-primary, #2563eb)' }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold shadow-xs transition-transform active:scale-95 bg-primary text-primary-foreground hover:opacity-90"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Accessible Modules</span>
@@ -106,7 +108,7 @@ function ProtectedRoute({ children, path }) {
 function DirectRoute() {
   const { user, loading } = useAuth();
   if (loading) {
-    return <UniserveLoader title="UNISERVE" subtitle="Student Career Gateway" status="Connecting to student database..." />;
+    return <UniserveLoader title="CampusCorp" subtitle="Student Career Gateway" status="Connecting to student database..." />;
   }
   if (!user) {
     return <Login portal="student" />;
@@ -122,7 +124,7 @@ function DirectRoute() {
 function SuperAdminRoute() {
   const { user, loading } = useAuth();
   if (loading) {
-    return <UniserveLoader title="UNISERVE" subtitle="Super Administrator Console" status="Connecting to root cluster..." />;
+    return <UniserveLoader title="CampusCorp" subtitle="Super Administrator Console" status="Connecting to root cluster..." />;
   }
   if (!user) {
     return <Login portal="superadmin" />;
@@ -138,7 +140,7 @@ function SuperAdminRoute() {
 function AdminRoute() {
   const { user, loading } = useAuth();
   if (loading) {
-    return <UniserveLoader title="UNISERVE" subtitle="Super Administrator Console" status="Verifying security permissions..." />;
+    return <UniserveLoader title="CampusCorp" subtitle="Super Administrator Console" status="Verifying security permissions..." />;
   }
   if (!user) {
     return <Login portal="superadmin" />;
@@ -154,7 +156,7 @@ function AdminRoute() {
 function PlacementRoute() {
   const { user, loading } = useAuth();
   if (loading) {
-    return <UniserveLoader title="UNISERVE" subtitle="Training & Placement Office" status="Loading recruitment drives..." />;
+    return <UniserveLoader title="CampusCorp" subtitle="Training & Placement Office" status="Loading recruitment drives..." />;
   }
   if (!user) {
     return <Login portal="placement" />;
@@ -170,7 +172,7 @@ function PlacementRoute() {
 function StaffRoute() {
   const { user, loading } = useAuth();
   if (loading) {
-    return <UniserveLoader title="UNISERVE" subtitle="Faculty & Staff Portal" status="Accessing departmental roster..." />;
+    return <UniserveLoader title="CampusCorp" subtitle="Faculty & Staff Portal" status="Accessing departmental roster..." />;
   }
   if (!user) {
     return <Login portal="staff" />;
@@ -181,6 +183,7 @@ function StaffRoute() {
     </Layout>
   );
 }
+
 
 export default function App() {
   return (
@@ -199,6 +202,16 @@ export default function App() {
 
               {/* Settings & Appearance */}
               <Route path="/settings" element={<ProtectedRoute path="/settings"><Settings /></ProtectedRoute>} />
+
+              {/* Career Explorer & Role Comparison & Skill Analyzer */}
+              <Route path="/domains" element={<ProtectedRoute path="/domains"><Domains /></ProtectedRoute>} />
+              <Route path="/compare" element={<ProtectedRoute path="/compare"><CompareRoles /></ProtectedRoute>} />
+              <Route path="/skill-analyzer" element={<ProtectedRoute path="/skill-analyzer"><SkillAnalyzer /></ProtectedRoute>} />
+              <Route path="/role-analyzer" element={<Navigate to="/skill-analyzer" replace />} />
+              <Route path="/career-explorer" element={<Navigate to="/domains" replace />} />
+              <Route path="/career-explorer/domains" element={<Navigate to="/domains" replace />} />
+              <Route path="/career-explorer/compare" element={<Navigate to="/compare" replace />} />
+              <Route path="/career-explorer/skill-analyzer" element={<Navigate to="/skill-analyzer" replace />} />
 
               {/* Portal Modules with Permission Enforcement */}
               <Route path="/students" element={<ProtectedRoute path="/students"><Students /></ProtectedRoute>} />

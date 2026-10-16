@@ -104,7 +104,7 @@ const Home = ({ section = 'overview' }) => {
             </div>
           ) : (
             subjects.map((subject, idx) => (
-              <div key={idx} className="rounded-2xl border-2 border-brand-600 bg-gradient-to-r from-brand-50 to-white p-6 shadow-sm">
+              <div key={idx} className="rounded-2xl border-2 border-brand-600 bg-neutral-100 dark:bg-neutral-900 border border-border text-foreground p-6 shadow-sm">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex-1">
                     <h3 className="text-2xl font-black text-brand-700">{subject.test_name || 'ONLINE ASSESSMENT'}</h3>
@@ -116,16 +116,16 @@ const Home = ({ section = 'overview' }) => {
                     <div className="mt-3 flex gap-2">
                       <span className="px-3 py-1 rounded-full bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-wider">{subject.phase1_name || 'Phase 1: Aptitude'}</span>
                       {subject.technical_subjects && (
-                        <span className="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-wider">{subject.phase2_name || 'Phase 2: Technical'}</span>
+                        <span className="px-3 py-1 rounded-full bg-secondary text-foreground text-xs font-bold uppercase tracking-wider">{subject.phase2_name || 'Phase 2: Technical'}</span>
                       )}
                       {subject.attempt_status === 'submitted' && (
-                        <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider">Completed</span>
+                        <span className="px-3 py-1 rounded-full bg-secondary text-foreground text-xs font-bold uppercase tracking-wider">Completed</span>
                       )}
                     </div>
                   </div>
                   {subject.attempt_status === 'submitted' ? (
                     <div className="text-right">
-                      <p className="text-emerald-600 font-black text-lg">TEST OVER</p>
+                      <p className="text-foreground font-black text-lg">TEST OVER</p>
                       <p className="text-slate-400 text-xs font-medium">Results are under review.</p>
                     </div>
                   ) : (
@@ -171,7 +171,7 @@ const Home = ({ section = 'overview' }) => {
                 <button className="rounded border px-3 py-2" disabled={index === 0} onClick={() => setIndex((i) => i - 1)}>Previous</button>
                 <div className="flex gap-1">
                   {attempt.questions.map((q, i) => (
-                    <button key={q.id} className={`h-8 w-8 rounded text-xs ${answers[q.id] ? 'bg-emerald-200' : 'bg-slate-200'}`} onClick={() => setIndex(i)}>{i + 1}</button>
+                    <button key={q.id} className={`h-8 w-8 rounded text-xs ${answers[q.id] ? 'bg-secondary text-foreground' : 'bg-slate-200'}`} onClick={() => setIndex(i)}>{i + 1}</button>
                   ))}
                 </div>
                 <button className="rounded border px-3 py-2" disabled={index === attempt.questions.length - 1} onClick={() => setIndex((i) => i + 1)}>Next</button>

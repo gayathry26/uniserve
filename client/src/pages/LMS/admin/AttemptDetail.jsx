@@ -25,7 +25,7 @@ const AttentionGraph = ({ history }) => {
                 <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest">Attention Flow Analysis</h4>
                 <div className="flex gap-4">
                     <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <div className="w-2 h-2 rounded-full bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]"></div>
                         <span className="text-[10px] font-bold text-slate-500">Score %</span>
                     </div>
                 </div>
@@ -34,14 +34,14 @@ const AttentionGraph = ({ history }) => {
                 <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" className="overflow-visible">
                     <defs>
                         <linearGradient id="grad-admin" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style={{ stopColor: '#3b82f6', stopOpacity: 0.15 }} />
-                            <stop offset="100%" style={{ stopColor: '#3b82f6', stopOpacity: 0 }} />
+                            <stop offset="0%" style={{ stopColor: '#171717', stopOpacity: 0.15 }} />
+                            <stop offset="100%" style={{ stopColor: '#171717', stopOpacity: 0 }} />
                         </linearGradient>
                     </defs>
                     <path d={`M 0 ${height} L ${points} L ${width} ${height} Z`} fill="url(#grad-admin)" />
-                    <polyline fill="none" stroke="#3b82f6" strokeWidth="2.5" points={points} strokeLinejoin="round" strokeLinecap="round" />
-                    <circle cx="0" cy={height - (history[0].score / maxScore) * height} r="4" fill="#3b82f6" stroke="white" strokeWidth="2" />
-                    <circle cx={width} cy={height - (history[history.length - 1].score / maxScore) * height} r="4" fill="#3b82f6" stroke="white" strokeWidth="2" />
+                    <polyline fill="none" stroke="#171717" strokeWidth="2.5" points={points} strokeLinejoin="round" strokeLinecap="round" />
+                    <circle cx="0" cy={height - (history[0].score / maxScore) * height} r="4" fill="#171717" stroke="white" strokeWidth="2" />
+                    <circle cx={width} cy={height - (history[history.length - 1].score / maxScore) * height} r="4" fill="#171717" stroke="white" strokeWidth="2" />
                 </svg>
             </div>
             <div className="flex justify-between mt-4">
@@ -230,7 +230,7 @@ const AttemptDetail = () => {
                                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Score</p>
                                     <p className="text-xl font-black text-brand-600">{attempt?.score} / 42</p>
                                 </div>
-                                <div className={`p-4 rounded-xl border ${(attempt?.attention_score || 0) >= 90 ? 'bg-emerald-900 border-emerald-800' : (attempt?.attention_score || 0) >= 70 ? 'bg-brand-900 border-brand-800' : 'bg-red-900 border-red-800'} text-white`}>
+                                <div className={`p-4 rounded-xl border ${(attempt?.attention_score || 0) >= 90 ? 'bg-secondary text-foreground border-border' : (attempt?.attention_score || 0) >= 70 ? 'bg-brand-900 border-brand-800' : 'bg-red-900 border-red-800'} text-white`}>
                                     <p className="text-xs font-bold opacity-70 uppercase tracking-wider mb-1">Attention Score</p>
                                     <p className="text-xl font-black">{Number(attempt?.attention_score || 0).toFixed(2)}%</p>
                                 </div>
@@ -240,7 +240,7 @@ const AttemptDetail = () => {
                                 </div>
                                 <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
                                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Status</p>
-                                    <p className={`text-sm font-black uppercase ${attempt?.status === 'submitted' ? 'text-emerald-600' : 'text-amber-600'}`}>{attempt?.status}</p>
+                                    <p className={`text-sm font-black uppercase ${attempt?.status === 'submitted' ? 'text-foreground' : 'text-foreground'}`}>{attempt?.status}</p>
                                 </div>
                             </div>
                         </div>
@@ -252,19 +252,19 @@ const AttemptDetail = () => {
                                     <span className="text-[10px] font-black text-slate-400 uppercase">Avg. Latency (RTT)</span>
                                     <span className="text-lg font-bold text-slate-700">{net?.rtt || 0} ms</span>
                                     <div className="w-full h-1 bg-slate-100 rounded-full mt-1 overflow-hidden">
-                                        <div className="h-full bg-emerald-500" style={{ width: `${Math.max(10, 100 - (net?.rtt / 10))}%` }}></div>
+                                        <div className="h-full bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]" style={{ width: `${Math.max(10, 100 - (net?.rtt / 10))}%` }}></div>
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <span className="text-[10px] font-black text-slate-400 uppercase">Downlink Speed</span>
                                     <span className="text-lg font-bold text-slate-700">{net?.downlink || 0} Mbps</span>
                                     <div className="w-full h-1 bg-slate-100 rounded-full mt-1 overflow-hidden">
-                                        <div className="h-full bg-blue-500" style={{ width: `${Math.min(100, (net?.downlink * 10))}%` }}></div>
+                                        <div className="h-full bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]" style={{ width: `${Math.min(100, (net?.downlink * 10))}%` }}></div>
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-1">
                                     <span className="text-[10px] font-black text-slate-400 uppercase">Network Quality</span>
-                                    <span className={`text-lg font-bold uppercase ${net?.effectiveType === '4g' ? 'text-emerald-600' : 'text-amber-600'}`}>
+                                    <span className={`text-lg font-bold uppercase ${net?.effectiveType === '4g' ? 'text-foreground' : 'text-foreground'}`}>
                                         {net?.effectiveType || 'N/A'}
                                     </span>
                                 </div>
@@ -306,7 +306,7 @@ const AttemptDetail = () => {
                     <div className="space-y-6">
                         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                             <h4 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span className="w-2 h-2 rounded-full bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] animate-pulse"></span>
                                 Session Information
                             </h4>
                             <div className="space-y-4 text-sm">
@@ -341,12 +341,12 @@ const AttemptDetail = () => {
                         <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                             <h4 className="font-bold text-slate-800 mb-4">Security Overview</h4>
                             <div className="space-y-3">
-                                <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 text-emerald-700">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                                <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary text-foreground">
+                                    <div className="w-2 h-2 rounded-full bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]"></div>
                                     <span className="text-xs font-bold">Lockdown Mode Active</span>
                                 </div>
-                                <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50 text-emerald-700">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                                <div className="flex items-center gap-3 p-3 rounded-xl bg-secondary text-foreground">
+                                    <div className="w-2 h-2 rounded-full bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]"></div>
                                     <span className="text-xs font-bold">Single Monitor Verified</span>
                                 </div>
                                 <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 text-slate-500">
@@ -367,7 +367,7 @@ const AttemptDetail = () => {
                             </div>
                             <div className="flex gap-2 text-xs font-bold text-slate-700">
                                 <span className="px-3 py-1 bg-white border border-slate-200 rounded-full shadow-sm">Score: {attempt?.score} / 42</span>
-                                <span className={`px-3 py-1 rounded-full text-white shadow-sm ${(attempt?.attention_score || 0) >= 70 ? 'bg-brand-600' : 'bg-rose-600'}`}>Attention: {Number(attempt?.attention_score || 0).toFixed(1)}%</span>
+                                <span className={`px-3 py-1 rounded-full text-white shadow-sm ${(attempt?.attention_score || 0) >= 70 ? 'bg-brand-600' : 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black'}`}>Attention: {Number(attempt?.attention_score || 0).toFixed(1)}%</span>
                             </div>
                         </div>
 
@@ -393,8 +393,8 @@ const AttemptDetail = () => {
                                                     </span>
                                                 )}
                                                 <span className={`text-[10px] font-extrabold px-2.5 py-0.5 border rounded-full uppercase tracking-wider ${isCoding
-                                                        ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
-                                                        : 'bg-blue-50 text-blue-700 border-blue-200'
+                                                        ? 'bg-secondary text-foreground border-border'
+                                                        : 'bg-secondary text-foreground border-border'
                                                     }`}>
                                                     {isCoding ? 'Technical / Concept' : 'MCQ Option'}
                                                 </span>
@@ -402,10 +402,10 @@ const AttemptDetail = () => {
                                             <div className="flex items-center gap-2">
                                                 {isMCQ && (
                                                     <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border ${ans.isCorrect
-                                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                                            ? 'bg-secondary text-foreground border-border'
                                                             : isSkipped
-                                                                ? 'bg-amber-50 text-amber-600 border-amber-200'
-                                                                : 'bg-rose-50 text-rose-700 border-rose-200'
+                                                                ? 'bg-secondary text-foreground border-border'
+                                                                : 'bg-secondary text-foreground border-border'
                                                         }`}>
                                                         {ans.isCorrect ? '✓ Correct' : isSkipped ? '⚠ Skipped' : '✗ Incorrect'}
                                                     </span>
@@ -444,14 +444,14 @@ const AttemptDetail = () => {
                                                             let icon = null;
 
                                                             if (isCorrectOpt) {
-                                                                cardStyle = 'border-emerald-200 bg-emerald-50 text-emerald-900 font-bold';
+                                                                cardStyle = 'border-border bg-secondary text-foreground font-bold';
                                                                 icon = (
-                                                                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-600 text-white text-xs mr-2 flex-shrink-0">✓</span>
+                                                                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] text-white text-xs mr-2 flex-shrink-0">✓</span>
                                                                 );
                                                             } else if (isSelected && !ans.isCorrect) {
-                                                                cardStyle = 'border-rose-200 bg-rose-50 text-rose-950 font-bold';
+                                                                cardStyle = 'border-border bg-secondary text-foreground font-bold';
                                                                 icon = (
-                                                                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-rose-600 text-white text-xs mr-2 flex-shrink-0">✗</span>
+                                                                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black text-white text-xs mr-2 flex-shrink-0">✗</span>
                                                                 );
                                                             }
 
@@ -476,9 +476,9 @@ const AttemptDetail = () => {
                                                 ) : (
                                                     /* Simple Fallback option design */
                                                     <div className="grid grid-cols-2 gap-3">
-                                                        <div className={`p-3 rounded-xl border ${ans.isCorrect ? 'bg-emerald-50/50 border-emerald-100' : 'bg-rose-50/50 border-rose-100'}`}>
+                                                        <div className={`p-3 rounded-xl border ${ans.isCorrect ? 'bg-secondary border-border' : 'bg-secondary border-border'}`}>
                                                             <p className="text-[9px] font-bold text-slate-400 uppercase mb-1">Student Option</p>
-                                                            <p className={`font-bold text-sm ${ans.isCorrect ? 'text-emerald-700' : 'text-rose-700'}`}>{ans.selectedOption || 'Skipped'}</p>
+                                                            <p className={`font-bold text-sm ${ans.isCorrect ? 'text-foreground' : 'text-foreground'}`}>{ans.selectedOption || 'Skipped'}</p>
                                                         </div>
                                                         <div className="p-3 rounded-xl border border-slate-100 bg-white">
                                                             <p className="text-[9px] font-bold text-slate-400 uppercase mb-1">Correct Option</p>
@@ -504,9 +504,9 @@ const AttemptDetail = () => {
                                                             <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden shadow-inner font-mono text-xs">
                                                                 <div className="flex justify-between items-center px-4 py-2.5 bg-slate-950 border-b border-slate-800">
                                                                     <div className="flex items-center gap-1.5">
-                                                                        <div className="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
-                                                                        <div className="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
-                                                                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                                                                        <div className="w-2.5 h-2.5 rounded-full bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black"></div>
+                                                                        <div className="w-2.5 h-2.5 rounded-full bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black"></div>
+                                                                        <div className="w-2.5 h-2.5 rounded-full bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]"></div>
                                                                         <span className="text-[10px] text-slate-400 ml-2 font-bold uppercase tracking-wider">{displaySubj} Compiler Submission</span>
                                                                     </div>
                                                                     <span className="text-[9px] font-bold text-slate-500 bg-slate-800 px-2 py-0.5 rounded uppercase">{displaySubj}</span>
@@ -519,10 +519,10 @@ const AttemptDetail = () => {
                                                     } else {
                                                         return (
                                                             /* Notepad look for IoT/VLSI */
-                                                            <div className="bg-amber-50/20 rounded-xl border border-amber-100/70 overflow-hidden shadow-inner font-sans text-sm">
-                                                                <div className="flex justify-between items-center px-4 py-2.5 bg-amber-100/20 border-b border-amber-100/70">
-                                                                    <span className="text-[10px] text-amber-800 font-bold uppercase tracking-wider">Concept Notepad Explanation</span>
-                                                                    <span className="text-[9px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded uppercase">{displaySubj}</span>
+                                                            <div className="bg-secondary rounded-xl border border-border overflow-hidden shadow-inner font-sans text-sm">
+                                                                <div className="flex justify-between items-center px-4 py-2.5 bg-secondary border-b border-border">
+                                                                    <span className="text-[10px] text-foreground font-bold uppercase tracking-wider">Concept Notepad Explanation</span>
+                                                                    <span className="text-[9px] font-bold text-foreground bg-secondary px-2 py-0.5 rounded uppercase">{displaySubj}</span>
                                                                 </div>
                                                                 <p className="p-4 text-slate-800 whitespace-pre-wrap leading-relaxed max-h-[300px] overflow-y-auto font-medium">
                                                                     {ans.codingResponse || 'No notepad explanation was submitted.'}
@@ -606,7 +606,7 @@ const AttemptDetail = () => {
                                             <span className="text-xs uppercase tracking-wider text-slate-500">{isCoding ? `${displaySubj} Submission` : 'MCQ Option'}</span>
                                         </div>
                                         {isMCQ && (
-                                            <div className={`text-xs font-bold uppercase ${ans.isCorrect ? 'text-emerald-600' : isSkipped ? 'text-amber-600' : 'text-rose-600'}`}>
+                                            <div className={`text-xs font-bold uppercase ${ans.isCorrect ? 'text-foreground' : isSkipped ? 'text-foreground' : 'text-foreground'}`}>
                                                 {ans.isCorrect ? 'Correct' : isSkipped ? 'Skipped' : 'Incorrect'}
                                             </div>
                                         )}
@@ -618,7 +618,7 @@ const AttemptDetail = () => {
                                         <div className="grid grid-cols-2 gap-4 text-sm">
                                             <div>
                                                 <span className="block text-[10px] font-bold text-slate-400 uppercase">Student Option</span>
-                                                <span className={`font-bold ${ans.isCorrect ? 'text-emerald-700' : 'text-rose-700'}`}>{ans.selectedOption || 'Skipped'}</span>
+                                                <span className={`font-bold ${ans.isCorrect ? 'text-foreground' : 'text-foreground'}`}>{ans.selectedOption || 'Skipped'}</span>
                                             </div>
                                             <div>
                                                 <span className="block text-[10px] font-bold text-slate-400 uppercase">Correct Option</span>

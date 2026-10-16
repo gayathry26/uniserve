@@ -14,7 +14,7 @@ export default function ExamRules({ subject, totalQuestions = 30, duration = 45,
     { title: 'Mouse Restrictions', desc: 'Right-click, text selection, and drag-and-drop are disabled.' },
     { title: 'Browser Navigation Blocked', desc: 'Browser back/refresh buttons are blocked during live testing.' },
     { title: 'Network Disconnection Detection', desc: 'Internet state is actively verified throughout the session.' },
-    { title: 'Uniserve Dynamic Watermarking', desc: 'Your roll number is digitally watermarked on screen to prevent screen capture.' },
+    { title: 'CampusCorp Dynamic Watermarking', desc: 'Your roll number is digitally watermarked on screen to prevent screen capture.' },
     { title: `${duration} Minutes Total Duration`, desc: `You have ${duration} minutes. The system auto-submits when the timer ends.` },
     { title: '3-Strike Auto-Submission', desc: 'Upon reaching 3 proctoring violations, the exam freezes, auto-submits, and automatically exits.' },
     { title: 'Inactivity Monitoring', desc: 'Inactivity for 2+ minutes triggers an attention warning.' },
@@ -23,14 +23,15 @@ export default function ExamRules({ subject, totalQuestions = 30, duration = 45,
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 sm:p-6 font-sans">
-      <div className="w-full max-w-3xl bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 sm:p-6 font-sans">
+      <div className="w-full max-w-3xl bg-card rounded-3xl border border-border shadow-xl overflow-hidden">
         {/* Header with Theme Gradient Accent */}
-        <div className="p-6 sm:p-8 text-center border-b border-slate-100 relative">
+        <div className="p-6 sm:p-8 text-center border-b border-border relative">
           <div
-            className="w-16 h-16 rounded-2xl bg-white p-2 shadow-md flex items-center justify-center mx-auto mb-4 border border-slate-100"
+            className="w-16 h-16 rounded-2xl bg-card p-2 shadow-md flex items-center justify-center mx-auto mb-4 border border-border overflow-hidden"
           >
-            <img src="/logo.jpeg" alt="Uniserve Logo" className="w-full h-full object-contain" />
+            <img src="/logo-light.jpeg" alt="CampusCorp Logo" className="w-full h-full object-contain dark:hidden" />
+            <img src="/logo-dark.jpeg" alt="CampusCorp Logo" className="w-full h-full object-contain hidden dark:block" />
           </div>
 
           <span
@@ -42,10 +43,10 @@ export default function ExamRules({ subject, totalQuestions = 30, duration = 45,
             }}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
-            Uniserve Proctored Assessment
+            CampusCorp Proctored Assessment
           </span>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
             {subject || 'Campus CodeSprint & Assessment'} Rules
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md mx-auto">
@@ -58,7 +59,7 @@ export default function ExamRules({ subject, totalQuestions = 30, duration = 45,
               Duration: {duration} Minutes
             </span>
             <span className="px-3 py-1 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1.5 border border-slate-200">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-foreground" />
               {totalQuestions} Questions (MCQ + Code)
             </span>
           </div>
@@ -95,7 +96,7 @@ export default function ExamRules({ subject, totalQuestions = 30, duration = 45,
               type="checkbox"
               checked={agreed}
               onChange={(e) => setAgreed(e.target.checked)}
-              className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+              className="w-4 h-4 rounded text-foreground focus:ring-neutral-400 cursor-pointer"
               style={{ accentColor: currentTheme.primary }}
             />
             <span className="text-xs font-semibold text-slate-700">

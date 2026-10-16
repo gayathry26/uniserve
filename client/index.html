@@ -2,9 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/jpeg" href="/logo.jpeg" />
+    <link rel="icon" type="image/jpeg" href="/logo-light.jpeg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/jpeg" href="/logo-dark.jpeg" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/jpeg" href="/logo-light.jpeg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Uniserve - Placement Management System</title>
+    <title>CampusCorp — IT Career Hub</title>
+    <script>
+      (function() {
+        try {
+          var mode = localStorage.getItem('campuscorp_theme_mode') || localStorage.getItem('uniserve_theme_mode');
+          var isDark = mode === 'dark' || (!mode && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -4,6 +4,9 @@ import apiClient from '../api/client';
 // All pages/routes available in Uniserve
 export const ALL_PAGES = [
   { path: '/', label: 'Placement Dashboard', category: 'Core & Overview' },
+  { path: '/domains', label: 'Explore Career Domains', category: 'Career Exploration' },
+  { path: '/compare', label: 'Compare Career Roles', category: 'Career Exploration' },
+  { path: '/skill-analyzer', label: 'Skill Analyzer', category: 'Career Exploration' },
   { path: '/students', label: 'Students Roster', category: 'Student Management' },
   { path: '/profile', label: 'My Student Profile', category: 'Student Management' },
   { path: '/companies', label: 'Placement Companies', category: 'Recruitment & Drives' },
@@ -40,6 +43,9 @@ const DEFAULT_ROLE_PERMISSIONS = {
   SUPER_ADMIN: ALL_PAGES.map((p) => p.path),
   TPO_OFFICER: [
     '/',
+    '/domains',
+    '/compare',
+    '/skill-analyzer',
     '/students',
     '/companies',
     '/jobs',
@@ -60,6 +66,9 @@ const DEFAULT_ROLE_PERMISSIONS = {
     '/settings',
   ],
   STUDENT: [
+    '/domains',
+    '/compare',
+    '/skill-analyzer',
     '/profile',
     '/companies',
     '/jobs',
@@ -79,6 +88,9 @@ const DEFAULT_ROLE_PERMISSIONS = {
   ],
   FACULTY_COORDINATOR: [
     '/',
+    '/domains',
+    '/compare',
+    '/skill-analyzer',
     '/students',
     '/companies',
     '/jobs',
@@ -99,6 +111,8 @@ const DEFAULT_ROLE_PERMISSIONS = {
   ],
   RECRUITER: [
     '/',
+    '/domains',
+    '/compare',
     '/jobs',
     '/drives',
     '/applications',
@@ -111,6 +125,8 @@ const DEFAULT_ROLE_PERMISSIONS = {
   ],
   MANAGEMENT: [
     '/',
+    '/domains',
+    '/compare',
     '/students',
     '/companies',
     '/jobs',
@@ -123,6 +139,8 @@ const DEFAULT_ROLE_PERMISSIONS = {
     '/settings',
   ],
   ALUMNI: [
+    '/domains',
+    '/compare',
     '/alumni',
     '/jobs',
     '/policies',
@@ -186,6 +204,17 @@ export function PermissionProvider({ children }) {
 
     const allowed = rolePermissions[roleName] || [];
     if (allowed.includes(pagePath)) return true;
+
+    // Career Explorer, Compare Roles & Skill Analyzer are accessible to all authenticated users
+    if (
+      pagePath.startsWith('/domains') ||
+      pagePath.startsWith('/compare') ||
+      pagePath.startsWith('/skill-analyzer') ||
+      pagePath.startsWith('/role-analyzer') ||
+      pagePath.startsWith('/career-explorer')
+    ) {
+      return true;
+    }
 
     // Subpath matching for video call meet, room codes, and exam
     if (pagePath.startsWith('/videocall/interview') || pagePath.startsWith('/interview/room')) {

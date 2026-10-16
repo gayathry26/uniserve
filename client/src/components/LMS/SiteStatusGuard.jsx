@@ -7,13 +7,13 @@ const MaintenanceScreen = () => {
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-slate-950 p-6 text-white overflow-hidden font-sans">
       {/* Background Decorative Blurs */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-slate-800/30 blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 rounded-full bg-indigo-950/20 blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 rounded-full bg-secondary text-foreground blur-3xl pointer-events-none"></div>
 
       {/* Main Glassmorphic Container */}
       <div className="relative z-10 w-full max-w-lg rounded-3xl border border-white/10 bg-slate-900/60 p-8 md:p-12 text-center backdrop-blur-xl shadow-2xl">
         <div className="mb-6 flex justify-center">
           <div className="relative">
-            <div className="absolute inset-0 rounded-2xl bg-indigo-500/20 blur-xl"></div>
+            <div className="absolute inset-0 rounded-2xl bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]/20 blur-xl"></div>
             <img src="/logo.png" alt="Palette Production Logo" className="relative h-24 w-24 object-contain animate-pulse" />
           </div>
         </div>
@@ -21,8 +21,8 @@ const MaintenanceScreen = () => {
         <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white mb-2 uppercase">
           Palette Production Academy
         </h1>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-bold uppercase tracking-wider mb-6">
-          <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black/10 border border-border text-foreground text-xs font-bold uppercase tracking-wider mb-6">
+          <span className="w-2 h-2 rounded-full bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black animate-ping"></span>
           Portal Offline
         </div>
 
@@ -80,7 +80,7 @@ export const SiteStatusGuard = ({ children }) => {
           height: '50px',
           border: '5px solid rgba(255,255,255,0.1)',
           borderRadius: '50%',
-          borderTopColor: '#4f46e5',
+          borderTopColor: '#fafafa',
           animation: 'spin 1s ease-in-out infinite'
         }}></div>
       </div>

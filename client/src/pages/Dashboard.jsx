@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { StatCard } from '../components/StatCard';
 import { StatusBadge } from '../components/Badge';
 import { LoadingSpinner } from '../components/LoadingSpinner';
@@ -15,7 +17,8 @@ import {
   CheckCircle2,
   Clock,
   Terminal,
-  ArrowRight
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 import {
   BarChart,
@@ -33,6 +36,7 @@ import {
 
 export function Dashboard() {
   const { user } = useAuth();
+  const { chartColors, isDark } = useTheme();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -54,10 +58,10 @@ export function Dashboard() {
 
   if (loading) return <LoadingSpinner text="Loading placement analytics and database counts..." />;
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+  const COLORS = chartColors;
 
   // 1. TPO / MANAGEMENT / ADMIN VIEW
-  if (['TPO_OFFICER', 'MANAGEMENT', 'ADMIN'].includes(user?.roleName)) {
+  if (['TPO_OFFICER', 'MANAGEMENT', 'ADMIN', 'SUPER_ADMIN'].includes(user?.roleName)) {
     const ov = data?.overview || {};
     const deptData = data?.departmentAnalytics || [];
     const salaryBins = data?.salaryDistribution || {};
@@ -71,20 +75,20 @@ export function Dashboard() {
 
     return (
       <div className="space-y-6">
-        {/* Welcome Banner */}
-        <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        {/* Welcome Banner - Neutral Card */}
+        <div className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-6 text-foreground border border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold mb-2 border border-blue-400/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-secondary text-foreground text-xs font-semibold mb-2 border border-border">
+              <span className="w-1.5 h-1.5 rounded-full bg-foreground" />
               Institutional Campus Drive 2026-27 Active
             </div>
-            <h1 className="text-2xl font-bold tracking-tight">University Placement Central Governance</h1>
-            <p className="text-slate-300 text-xs mt-1 max-w-2xl leading-relaxed">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">CampusCorp Central Placement Governance</h1>
+            <p className="text-muted-foreground text-xs mt-1 max-w-2xl leading-relaxed">
               Real-time synchronization across central institutional records (`lms`) and department databases (`lms_cse`, `lms_ece`, `lms_mech`, etc.).
             </p>
           </div>
           <div className="flex gap-2">
-            <span className="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-semibold text-white transition-colors cursor-pointer border border-white/10">
+            <span className="px-3 py-1.5 bg-card rounded-lg text-xs font-semibold text-foreground border border-border shadow-2xs">
               Batch: 2023-2027
             </span>
           </div>
@@ -97,14 +101,12 @@ export function Dashboard() {
             value={ov.totalStudents}
             subtitle={`${ov.registeredStudents} Registered for Drives`}
             icon={Users}
-            color="blue"
           />
           <StatCard
             title="Institutional Placement Rate"
             value={`${ov.placementRate}%`}
             subtitle={`${ov.placedStudents} Students Placed`}
             icon={GraduationCap}
-            color="emerald"
             trend={+12}
           />
           <StatCard
@@ -112,50 +114,48 @@ export function Dashboard() {
             value={`₹${ov.averagePackageLpa} LPA`}
             subtitle={`Highest: ₹${ov.highestPackageLpa} LPA`}
             icon={TrendingUp}
-            color="purple"
           />
           <StatCard
             title="Active Companies"
             value={ov.totalCompanies}
             subtitle={`${ov.upcomingDrives} Upcoming Drives`}
             icon={Building2}
-            color="amber"
           />
         </div>
 
         {/* Analytics Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Department-wise Placement Rates */}
-          <div className="lg:col-span-2 bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+          <div className="lg:col-span-2 bg-card text-card-foreground rounded-xl border border-border p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-bold text-slate-800">Department Placement Performance</h3>
-                <p className="text-xs text-slate-500">Placement percentage by department</p>
+                <h3 className="text-sm font-bold text-foreground">Department Placement Performance</h3>
+                <p className="text-xs text-muted-foreground">Placement percentage by department</p>
               </div>
-              <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-md">Live Multi-DB</span>
+              <span className="text-xs font-medium text-foreground bg-secondary px-2 py-1 rounded-md border border-border">Live Multi-DB</span>
             </div>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={deptData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis dataKey="department_code" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} domain={[0, 100]} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.08)" : "#e5e5e5"} vertical={false} />
+                  <XAxis dataKey="department_code" tick={{ fontSize: 11, fill: isDark ? '#a1a1a1' : '#737373' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: isDark ? '#a1a1a1' : '#737373' }} axisLine={false} tickLine={false} domain={[0, 100]} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#1e293b', color: '#fff', borderRadius: '8px', fontSize: '12px' }}
+                    contentStyle={{ backgroundColor: isDark ? '#171717' : '#ffffff', color: isDark ? '#fafafa' : '#0a0a0a', borderColor: isDark ? 'rgba(255,255,255,0.15)' : '#e5e5e5', borderRadius: '10px', fontSize: '12px' }}
                     formatter={(val) => [`${val}%`, 'Placement Rate']}
                   />
-                  <Bar dataKey="placement_rate" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="placement_rate" fill={COLORS[0]} radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           {/* Salary Package Distribution */}
-          <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+          <div className="bg-card text-card-foreground rounded-xl border border-border p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-bold text-slate-800">Salary Band Distribution</h3>
-                <p className="text-xs text-slate-500">Offers by CTC range</p>
+                <h3 className="text-sm font-bold text-foreground">Salary Band Distribution</h3>
+                <p className="text-xs text-muted-foreground">Offers by CTC range</p>
               </div>
             </div>
             <div className="h-64 flex items-center justify-center">
@@ -175,12 +175,12 @@ export function Dashboard() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip contentStyle={{ backgroundColor: '#1e293b', color: '#fff', borderRadius: '8px', fontSize: '12px' }} />
+                    <Tooltip contentStyle={{ backgroundColor: isDark ? '#171717' : '#ffffff', color: isDark ? '#fafafa' : '#0a0a0a', borderColor: isDark ? 'rgba(255,255,255,0.15)' : '#e5e5e5', borderRadius: '10px', fontSize: '12px' }} />
                     <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
-                <p className="text-xs text-slate-400">No offers issued yet</p>
+                <p className="text-xs text-muted-foreground">No offers issued yet</p>
               )}
             </div>
           </div>
@@ -188,37 +188,37 @@ export function Dashboard() {
 
         {/* Compiler Environment Diagnostic */}
         {data?.compilersStatus && (
-          <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
+          <div className="bg-card text-card-foreground rounded-xl border border-border p-6 shadow-sm">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Terminal className="w-4 h-4 text-slate-600" />
-                <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Assessment Sandbox Environment Status</h3>
+                <Terminal className="w-4 h-4 text-foreground" />
+                <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">Assessment Sandbox Environment Status</h3>
               </div>
-              <span className="text-[11px] text-slate-500">Host Hardware Probed at Startup</span>
+              <span className="text-[11px] text-muted-foreground">Host Hardware Probed at Startup</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 rounded-lg border bg-slate-50 border-slate-200">
-                <span className="text-slate-500 font-medium">Python 3:</span>
-                <p className="font-bold text-emerald-600 mt-1">
-                  {data.compilersStatus.python?.available ? `✅ Ready (${data.compilersStatus.python.version?.split(' ')[1] || '3.13'})` : '❌ Missing'}
+              <div className="p-3 rounded-lg border bg-secondary border-border">
+                <span className="text-muted-foreground font-medium">Python 3:</span>
+                <p className="font-bold text-foreground mt-1">
+                  {data.compilersStatus.python?.available ? `Ready (${data.compilersStatus.python.version?.split(' ')[1] || '3.13'})` : 'Missing'}
                 </p>
               </div>
-              <div className="p-3 rounded-lg border bg-slate-50 border-slate-200">
-                <span className="text-slate-500 font-medium">C (GCC):</span>
-                <p className="font-semibold text-slate-700 mt-1">
-                  {data.compilersStatus.c?.available ? '✅ GCC Ready' : '⚠️ Install MinGW in PATH'}
+              <div className="p-3 rounded-lg border bg-secondary border-border">
+                <span className="text-muted-foreground font-medium">C (GCC):</span>
+                <p className="font-semibold text-foreground mt-1">
+                  {data.compilersStatus.c?.available ? 'GCC Ready' : 'Install MinGW in PATH'}
                 </p>
               </div>
-              <div className="p-3 rounded-lg border bg-slate-50 border-slate-200">
-                <span className="text-slate-500 font-medium">C++ (G++):</span>
-                <p className="font-semibold text-slate-700 mt-1">
-                  {data.compilersStatus.cpp?.available ? '✅ G++ Ready' : '⚠️ Install MinGW in PATH'}
+              <div className="p-3 rounded-lg border bg-secondary border-border">
+                <span className="text-muted-foreground font-medium">C++ (G++):</span>
+                <p className="font-semibold text-foreground mt-1">
+                  {data.compilersStatus.cpp?.available ? 'G++ Ready' : 'Install MinGW in PATH'}
                 </p>
               </div>
-              <div className="p-3 rounded-lg border bg-slate-50 border-slate-200">
-                <span className="text-slate-500 font-medium">Java (javac):</span>
-                <p className="font-semibold text-slate-700 mt-1">
-                  {data.compilersStatus.java?.available ? '✅ Java Ready' : '⚠️ Install JDK in PATH'}
+              <div className="p-3 rounded-lg border bg-secondary border-border">
+                <span className="text-muted-foreground font-medium">Java (javac):</span>
+                <p className="font-semibold text-foreground mt-1">
+                  {data.compilersStatus.java?.available ? 'Java Ready' : 'Install JDK in PATH'}
                 </p>
               </div>
             </div>
@@ -232,47 +232,65 @@ export function Dashboard() {
   if (user?.roleName === 'STUDENT') {
     const prof = data?.studentProfile || {};
     const apps = data?.applications || [];
-    const offers = data?.offers || [];
-    const interviews = data?.interviews || [];
     const stats = data?.stats || {};
 
     return (
       <div className="space-y-6">
-        <div className="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-2xl p-6 text-white shadow-md">
+        <div className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-6 text-foreground border border-border">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <span className="text-xs bg-white/20 px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider">
+              <span className="text-xs bg-secondary text-foreground border border-border px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider">
                 Student Self-Service Portal
               </span>
-              <h1 className="text-2xl font-bold tracking-tight mt-2">Welcome, {user.firstName} {user.lastName}</h1>
-              <p className="text-blue-100 text-xs mt-1">
+              <h1 className="text-2xl font-bold tracking-tight text-foreground mt-2">Welcome, {user.firstName} {user.lastName}</h1>
+              <p className="text-muted-foreground text-xs mt-1">
                 Reg No: {user.registerNumber} • Department: {user.departmentCode} • CGPA: {prof.cgpa || '8.50'}
               </p>
             </div>
-            <div className="bg-white/10 p-3 rounded-xl border border-white/20 text-center">
-              <span className="text-xs text-blue-200 font-medium">AI Readiness Score</span>
-              <div className="text-2xl font-extrabold text-white mt-0.5">{stats.readinessScore || 75}%</div>
+            <div className="bg-card p-3 rounded-xl border border-border text-center shadow-2xs">
+              <span className="text-xs text-muted-foreground font-medium">AI Readiness Score</span>
+              <div className="text-2xl font-black text-foreground mt-0.5">{stats.readinessScore || 75}%</div>
             </div>
           </div>
         </div>
 
         {/* Student Quick Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <StatCard title="Total Applied" value={stats.totalApplications} icon={Briefcase} color="blue" />
-          <StatCard title="In Progress / Shortlist" value={stats.shortlistedCount} icon={Clock} color="amber" />
-          <StatCard title="Placement Offers" value={stats.offersCount} icon={Award} color="emerald" />
-          <StatCard title="Placement Status" value={prof.placement_status || 'REGISTERED'} icon={CheckCircle2} color="purple" />
+          <StatCard title="Total Applied" value={stats.totalApplications} icon={Briefcase} />
+          <StatCard title="In Progress / Shortlist" value={stats.shortlistedCount} icon={Clock} />
+          <StatCard title="Placement Offers" value={stats.offersCount} icon={Award} />
+          <StatCard title="Placement Status" value={prof.placement_status || 'REGISTERED'} icon={CheckCircle2} />
+        </div>
+
+        {/* Skill Analyzer Quick Banner */}
+        <div className="bg-card rounded-xl border border-purple-500/30 p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-foreground">Skill Analyzer & IT Career Match</h4>
+              <p className="text-xs text-muted-foreground">Discover your technical fitment across 12+ IT roles and follow your personalized placement roadmap.</p>
+            </div>
+          </div>
+          <Link
+            to="/skill-analyzer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white shrink-0 shadow-xs transition-transform active:scale-95"
+          >
+            <span>Analyze My Skills</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
         {/* Active Applications Table */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
-          <h3 className="text-sm font-bold text-slate-800 mb-3">My Application Status</h3>
+        <div className="bg-card text-card-foreground rounded-xl border border-border p-6 shadow-sm">
+          <h3 className="text-sm font-bold text-foreground mb-3">My Application Status</h3>
           {apps.length === 0 ? (
-            <p className="text-xs text-slate-400 py-6 text-center">You have not applied for any drives yet. Check the Jobs tab.</p>
+            <p className="text-xs text-muted-foreground py-6 text-center">You have not applied for any drives yet. Check the Jobs tab.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-slate-600">
-                <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+              <table className="w-full text-left text-xs text-muted-foreground">
+                <thead className="bg-secondary text-foreground font-semibold border-b border-border">
                   <tr>
                     <th className="py-2.5 px-3">Company</th>
                     <th className="py-2.5 px-3">Role</th>
@@ -281,12 +299,12 @@ export function Dashboard() {
                     <th className="py-2.5 px-3">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {apps.map((app) => (
-                    <tr key={app.id} className="hover:bg-slate-50/80">
-                      <td className="py-3 px-3 font-semibold text-slate-800">{app.company_name}</td>
+                    <tr key={app.id} className="hover:bg-secondary transition-colors">
+                      <td className="py-3 px-3 font-semibold text-foreground">{app.company_name}</td>
                       <td className="py-3 px-3">{app.job_title}</td>
-                      <td className="py-3 px-3 font-semibold text-emerald-600">₹{app.ctc_lpa} LPA</td>
+                      <td className="py-3 px-3 font-semibold text-foreground">₹{app.ctc_lpa} LPA</td>
                       <td className="py-3 px-3">Round {app.current_round_number}</td>
                       <td className="py-3 px-3"><StatusBadge status={app.status} /></td>
                     </tr>
@@ -307,28 +325,28 @@ export function Dashboard() {
 
     return (
       <div className="space-y-6">
-        <div className="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-2xl p-6 text-white shadow-md">
-          <span className="text-xs bg-white/20 px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider">
+        <div className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-6 text-foreground border border-border">
+          <span className="text-xs bg-secondary text-foreground border border-border px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider">
             Department Isolation Portal
           </span>
-          <h1 className="text-2xl font-bold tracking-tight mt-2">Department of {data?.departmentCode} Placement Coordination</h1>
-          <p className="text-emerald-100 text-xs mt-1">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground mt-2">Department of {data?.departmentCode} Placement Coordination</h1>
+          <p className="text-muted-foreground text-xs mt-1">
             Isolated Department Database: `lms_{data?.departmentCode?.toLowerCase()}` • Academic History & Waivers
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <StatCard title="Department Cohort" value={ov.totalStudents} subtitle={`${ov.placedStudents} Placed Students`} icon={Users} color="emerald" />
-          <StatCard title="Department Placement Rate" value={`${ov.placementRate}%`} subtitle="Class of 2027" icon={GraduationCap} color="blue" />
-          <StatCard title="Average Department CGPA" value={ov.avgCgpa} subtitle="Verified by Faculty Mentors" icon={Award} color="purple" />
+          <StatCard title="Department Cohort" value={ov.totalStudents} subtitle={`${ov.placedStudents} Placed Students`} icon={Users} />
+          <StatCard title="Department Placement Rate" value={`${ov.placementRate}%`} subtitle="Class of 2027" icon={GraduationCap} />
+          <StatCard title="Average Department CGPA" value={ov.avgCgpa} subtitle="Verified by Faculty Mentors" icon={Award} />
         </div>
 
         {/* Academic Roster from Department Database */}
-        <div className="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs">
-          <h3 className="text-sm font-bold text-slate-800 mb-3">Department Academic Roster (Isolated SQL DB)</h3>
+        <div className="bg-card text-card-foreground rounded-xl border border-border p-6 shadow-sm">
+          <h3 className="text-sm font-bold text-foreground mb-3">Department Academic Roster (Isolated SQL DB)</h3>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
-              <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
+            <table className="w-full text-left text-xs text-muted-foreground">
+              <thead className="bg-secondary text-foreground font-semibold border-b border-border">
                 <tr>
                   <th className="py-2.5 px-3">Register No</th>
                   <th className="py-2.5 px-3">Current CGPA</th>
@@ -338,11 +356,11 @@ export function Dashboard() {
                   <th className="py-2.5 px-3">Verification</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {academicRoster.map((r, i) => (
-                  <tr key={i} className="hover:bg-slate-50/80">
-                    <td className="py-3 px-3 font-semibold text-slate-800">{r.register_number}</td>
-                    <td className="py-3 px-3 font-bold text-blue-600">{r.current_cgpa}</td>
+                  <tr key={i} className="hover:bg-secondary transition-colors">
+                    <td className="py-3 px-3 font-semibold text-foreground">{r.register_number}</td>
+                    <td className="py-3 px-3 font-bold text-foreground">{r.current_cgpa}</td>
                     <td className="py-3 px-3">{r.active_backlogs}</td>
                     <td className="py-3 px-3">#{r.department_rank}</td>
                     <td className="py-3 px-3">{r.faculty_mentor_name}</td>
@@ -360,19 +378,19 @@ export function Dashboard() {
   // 4. RECRUITER VIEW
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-800 to-indigo-900 rounded-2xl p-6 text-white shadow-md">
-        <span className="text-xs bg-white/20 px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider">
+      <div className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-6 text-foreground border border-border">
+        <span className="text-xs bg-secondary text-foreground border border-border px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider">
           Company Recruiter Portal
         </span>
-        <h1 className="text-2xl font-bold tracking-tight mt-2">{data?.companyName || 'Corporate Partner'} Campus Drive Portal</h1>
-        <p className="text-purple-200 text-xs mt-1">Review candidates, progress rounds, and issue offers.</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground mt-2">{data?.companyName || 'Corporate Partner'} Campus Drive Portal</h1>
+        <p className="text-muted-foreground text-xs mt-1">Review candidates, progress rounds, and issue offers.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <StatCard title="Active Postings" value={data?.stats?.jobsCount || 0} icon={Briefcase} color="purple" />
-        <StatCard title="Total Candidates" value={data?.stats?.totalApplicants || 0} icon={Users} color="blue" />
-        <StatCard title="Shortlisted" value={data?.stats?.shortlisted || 0} icon={CheckCircle2} color="emerald" />
-        <StatCard title="Offers Released" value={data?.stats?.offersReleased || 0} icon={Award} color="amber" />
+        <StatCard title="Active Postings" value={data?.stats?.jobsCount || 0} icon={Briefcase} />
+        <StatCard title="Total Candidates" value={data?.stats?.totalApplicants || 0} icon={Users} />
+        <StatCard title="Shortlisted" value={data?.stats?.shortlisted || 0} icon={CheckCircle2} />
+        <StatCard title="Offers Released" value={data?.stats?.offersReleased || 0} icon={Award} />
       </div>
     </div>
   );

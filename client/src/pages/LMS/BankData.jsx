@@ -12,11 +12,11 @@ export default function BankData() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-8 sm:p-10">
+        <div className="bg-neutral-100 dark:bg-neutral-900 border border-border text-foreground px-6 py-8 sm:p-10">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-extrabold text-white tracking-tight">Account Statement</h1>
-              <p className="mt-2 text-blue-100 font-medium">Account Holder: Hari</p>
+              <p className="mt-2 text-muted-foreground font-medium">Account Holder: Hari</p>
             </div>
             <div className="bg-white/20 p-3 rounded-lg backdrop-blur-sm">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -50,13 +50,13 @@ export default function BankData() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">{txn.reference}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold">
-                      <span className={txn.type === 'Credit' ? 'text-green-600' : 'text-gray-900'}>
+                      <span className={txn.type === 'Credit' ? 'text-foreground' : 'text-gray-900'}>
                         {txn.type === 'Credit' ? '+' : '-'}{txn.amount}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        txn.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        txn.status === 'Completed' ? 'bg-secondary text-foreground text-foreground' : 'bg-secondary text-foreground text-foreground'
                       }`}>
                         {txn.status}
                       </span>

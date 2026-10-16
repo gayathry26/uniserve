@@ -59,8 +59,8 @@ export function Drives() {
     <div className="space-y-6 pb-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Placement Drive Schedules & Stages</h1>
-          <p className="text-xs text-slate-500">
+          <h1 className="text-xl font-bold text-foreground">Placement Drive Schedules & Stages</h1>
+          <p className="text-xs text-muted-foreground">
             Multi-stage recruitment coordination, live selection round progression, and candidate pipeline tracking.
           </p>
         </div>
@@ -68,7 +68,7 @@ export function Drives() {
         <div className="flex items-center gap-2">
           <Link
             to="/companies"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#171717] hover:bg-[#262626] text-[#fafafa] dark:bg-[#fafafa] dark:hover:bg-[#e5e5e5] dark:text-[#0a0a0a] rounded-xl text-xs font-bold shadow-xs transition-colors"
           >
             <Building2 className="w-3.5 h-3.5" /> Placement Companies Directory
           </Link>
@@ -78,7 +78,7 @@ export function Drives() {
       {loading ? (
         <LoadingSpinner text="Retrieving campus drive schedules..." />
       ) : drives.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-xl border border-slate-200 text-xs text-slate-400">
+        <div className="bg-white p-12 text-center rounded-xl border border-border text-xs text-muted-foreground">
           No placement drives scheduled.
         </div>
       ) : (
@@ -88,40 +88,40 @@ export function Drives() {
             const studentApp = d.student_application;
 
             return (
-              <div key={d.id} className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs space-y-4 hover:border-blue-300 transition-colors">
+              <div key={d.id} className="bg-white rounded-2xl border border-border p-5 shadow-xs space-y-4 hover:border-border transition-colors">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-base text-slate-900">{d.drive_title}</h3>
+                      <h3 className="font-bold text-base text-foreground">{d.drive_title}</h3>
                       <StatusBadge status={d.status} />
                       <StatusBadge status={d.company_tier || 'REGULAR'} />
                     </div>
-                    <p className="text-xs text-slate-500 mt-1">
-                      Company: <strong className="text-slate-800">{d.company_name}</strong> • Role: {d.job_title} (₹{d.ctc_lpa} LPA)
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Company: <strong className="text-foreground">{d.company_name}</strong> • Role: {d.job_title} (₹{d.ctc_lpa} LPA)
                     </p>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 text-xs">
-                    <span className="flex items-center gap-1 text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
-                      <CalendarDays className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="flex items-center gap-1 text-muted-foreground bg-secondary px-2.5 py-1 rounded-lg border border-border">
+                      <CalendarDays className="w-3.5 h-3.5 text-foreground" />
                       {d.drive_date?.split('T')[0] || d.drive_date}
                     </span>
-                    <span className="flex items-center gap-1 text-slate-600 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">
-                      <MapPin className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="flex items-center gap-1 text-muted-foreground bg-secondary px-2.5 py-1 rounded-lg border border-border">
+                      <MapPin className="w-3.5 h-3.5 text-foreground" />
                       {d.venue}
                     </span>
                   </div>
                 </div>
 
                 {/* Recruitment Round Progression Stepper */}
-                <div className="pt-2 border-t border-slate-100">
+                <div className="pt-2 border-t border-border">
                   <div className="flex items-center justify-between text-[11px] mb-2">
-                    <span className="font-semibold text-slate-500 uppercase tracking-wider">
+                    <span className="font-semibold text-muted-foreground uppercase tracking-wider">
                       Drive Selection Stages ({d.rounds?.length || 4} Configured Rounds)
                     </span>
                     {isAdminOrTpo && (
-                      <span className="text-slate-600 font-semibold">
-                        Registered: <strong className="text-blue-700">{d.total_applicants || 0}</strong> • Shortlisted: <strong className="text-purple-700">{d.shortlisted_count || 0}</strong> • Selected: <strong className="text-emerald-700">{d.selected_count || 0}</strong>
+                      <span className="text-muted-foreground font-semibold">
+                        Registered: <strong className="text-foreground">{d.total_applicants || 0}</strong> • Shortlisted: <strong className="text-foreground">{d.shortlisted_count || 0}</strong> • Selected: <strong className="text-foreground">{d.selected_count || 0}</strong>
                       </span>
                     )}
                   </div>
@@ -132,16 +132,16 @@ export function Drives() {
                         key={rnd.id || i}
                         className={`p-3 rounded-xl border text-xs ${
                           rnd.round_number === 1
-                            ? 'bg-blue-50/70 border-blue-200 text-blue-900 font-semibold'
-                            : 'bg-slate-50 border-slate-200 text-slate-600'
+                            ? 'bg-secondary border-border text-foreground font-semibold'
+                            : 'bg-secondary border-border text-muted-foreground'
                         }`}
                       >
                         <div className="flex items-center justify-between text-[11px]">
                           <span>Round {rnd.round_number}</span>
                           <StatusBadge status={rnd.status} />
                         </div>
-                        <div className="font-bold mt-1 text-slate-800 truncate">{rnd.round_name}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">{rnd.round_type}</div>
+                        <div className="font-bold mt-1 text-foreground truncate">{rnd.round_name}</div>
+                        <div className="text-[10px] text-muted-foreground mt-0.5">{rnd.round_type}</div>
                       </div>
                     ))}
                   </div>
@@ -149,16 +149,16 @@ export function Drives() {
 
                 {/* Student Registration Status Bar (if student) */}
                 {isStudent && (
-                  <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div className="pt-2 border-t border-border flex flex-wrap items-center justify-between gap-2 text-xs">
                     {hasApplied ? (
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        <span className="font-bold text-emerald-900">
+                        <CheckCircle2 className="w-4 h-4 text-foreground" />
+                        <span className="font-bold text-foreground">
                           You are registered for this drive (App ID: #{studentApp?.id} • Round {studentApp?.current_round_number || 1} • Status: {studentApp?.status})
                         </span>
                       </div>
                     ) : (
-                      <span className="text-slate-500 text-xs">
+                      <span className="text-muted-foreground text-xs">
                         Open recruitment drive for eligible candidates.
                       </span>
                     )}
@@ -167,14 +167,14 @@ export function Drives() {
                       {hasApplied ? (
                         <button
                           onClick={() => navigate('/applications')}
-                          className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs shadow-xs cursor-pointer"
+                          className="px-3 py-1.5 bg-[#171717] hover:bg-[#262626] text-[#fafafa] dark:bg-[#fafafa] dark:hover:bg-[#e5e5e5] dark:text-[#0a0a0a] rounded-lg font-bold text-xs shadow-xs cursor-pointer"
                         >
                           Track in My Applications &rarr;
                         </button>
                       ) : (
                         <button
                           onClick={() => navigate('/companies')}
-                          className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-xs shadow-xs cursor-pointer"
+                          className="px-3 py-1.5 bg-[#171717] hover:bg-[#262626] text-[#fafafa] dark:bg-[#fafafa] dark:hover:bg-[#e5e5e5] dark:text-[#0a0a0a] rounded-lg font-bold text-xs shadow-xs cursor-pointer"
                         >
                           View & Apply in Companies &rarr;
                         </button>
@@ -185,15 +185,15 @@ export function Drives() {
 
                 {/* Placement Officer Action Bar */}
                 {isAdminOrTpo && (
-                  <div className="flex flex-wrap items-center justify-between pt-2 border-t border-slate-100 text-xs gap-3">
+                  <div className="flex flex-wrap items-center justify-between pt-2 border-t border-border text-xs gap-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-slate-500">
-                        Current Active Stage: <strong className="text-blue-600">{d.current_stage}</strong>
+                      <span className="text-muted-foreground">
+                        Current Active Stage: <strong className="text-foreground">{d.current_stage}</strong>
                       </span>
                       <select
                         onChange={(e) => handleUpdateStage(d.id, e.target.value)}
                         defaultValue={d.current_stage}
-                        className="px-2.5 py-1 border border-slate-200 rounded-lg text-xs bg-slate-50 text-slate-700 font-medium"
+                        className="px-2.5 py-1 border border-border rounded-lg text-xs bg-secondary text-foreground font-medium"
                       >
                         <option value="Online Assessment">Stage: Online Assessment</option>
                         <option value="Technical Interviews">Stage: Technical Interviews</option>
@@ -205,7 +205,7 @@ export function Drives() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setSelectedManageCompanyId(d.company_id)}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow-xs transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#171717] hover:bg-[#262626] text-[#fafafa] dark:bg-[#fafafa] dark:hover:bg-[#e5e5e5] dark:text-[#0a0a0a] font-bold rounded-lg text-xs shadow-xs transition-colors cursor-pointer"
                       >
                         <Users className="w-3.5 h-3.5" /> Manage Drive & Applicants
                       </button>

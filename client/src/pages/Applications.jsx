@@ -141,21 +141,18 @@ export function Applications() {
     return (
       <div className="space-y-6 pb-12">
         {/* Banner Header */}
-        <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-blue-950 p-6 rounded-2xl text-white shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="bg-secondary border border-border text-foreground p-6 rounded-2xl shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span
-                className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white"
-                style={{ backgroundColor: currentTheme.primary }}
-              >
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-card text-foreground border border-border">
                 Candidate Portal
               </span>
-              <span className="text-xs text-slate-300 font-medium">Placement Governance Tracking</span>
+              <span className="text-xs text-muted-foreground font-medium">Placement Governance Tracking</span>
             </div>
-            <h1 className="text-2xl font-black tracking-tight flex items-center gap-2.5 text-white">
-              <FileCheck2 className="w-7 h-7 text-blue-400" /> My Placement Applications
+            <h1 className="text-2xl font-black tracking-tight flex items-center gap-2.5 text-foreground">
+              <FileCheck2 className="w-7 h-7 text-foreground" /> My Placement Applications
             </h1>
-            <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs text-muted-foreground mt-1 max-w-2xl leading-relaxed">
               Real-time multi-stage recruitment pipeline tracking, eligibility status verification, confirmed interview schedules, and official selection results.
             </p>
           </div>
@@ -163,7 +160,7 @@ export function Applications() {
           <div className="flex items-center gap-2">
             <Link
               to="/companies"
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-primary text-primary-foreground hover:opacity-90 rounded-xl text-xs font-bold shadow-xs transition-opacity"
             >
               <Building2 className="w-4 h-4" /> Browse More Companies
             </Link>
@@ -172,62 +169,62 @@ export function Applications() {
 
         {/* Student Profile Quick Stats Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-            <div className="flex items-center justify-between text-slate-500 mb-1">
+          <div className="bg-card p-4 rounded-xl border border-border shadow-xs">
+            <div className="flex items-center justify-between text-muted-foreground mb-1">
               <span className="text-xs font-semibold">Total Applied</span>
-              <FileCheck2 className="w-4 h-4 text-blue-600" />
+              <FileCheck2 className="w-4 h-4 text-foreground" />
             </div>
-            <div className="text-2xl font-black text-slate-900">{applications.length}</div>
-            <p className="text-[11px] text-slate-400 mt-0.5">Campus recruitment drives</p>
+            <div className="text-2xl font-black text-foreground">{applications.length}</div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Campus recruitment drives</p>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-            <div className="flex items-center justify-between text-slate-500 mb-1">
+          <div className="bg-card p-4 rounded-xl border border-border shadow-xs">
+            <div className="flex items-center justify-between text-muted-foreground mb-1">
               <span className="text-xs font-semibold">In Progress</span>
-              <Clock className="w-4 h-4 text-amber-600" />
+              <Clock className="w-4 h-4 text-foreground" />
             </div>
-            <div className="text-2xl font-black text-amber-700">{activeCount}</div>
-            <p className="text-[11px] text-slate-400 mt-0.5">Active under evaluation</p>
+            <div className="text-2xl font-black text-foreground">{activeCount}</div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Active under evaluation</p>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-            <div className="flex items-center justify-between text-slate-500 mb-1">
+          <div className="bg-card p-4 rounded-xl border border-border shadow-xs">
+            <div className="flex items-center justify-between text-muted-foreground mb-1">
               <span className="text-xs font-semibold">Shortlisted & Tech</span>
-              <Sparkles className="w-4 h-4 text-purple-600" />
+              <Sparkles className="w-4 h-4 text-foreground" />
             </div>
-            <div className="text-2xl font-black text-purple-700">{shortlistedCount}</div>
-            <p className="text-[11px] text-slate-400 mt-0.5">Assessment & Interview stages</p>
+            <div className="text-2xl font-black text-foreground">{shortlistedCount}</div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Assessment & Interview stages</p>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-            <div className="flex items-center justify-between text-slate-500 mb-1">
+          <div className="bg-card p-4 rounded-xl border border-border shadow-xs">
+            <div className="flex items-center justify-between text-muted-foreground mb-1">
               <span className="text-xs font-semibold">Offers Released</span>
-              <Award className="w-4 h-4 text-emerald-600" />
+              <Award className="w-4 h-4 text-foreground" />
             </div>
-            <div className="text-2xl font-black text-emerald-700">{offeredCount}</div>
-            <p className="text-[11px] text-slate-400 mt-0.5">Final selections confirmed</p>
+            <div className="text-2xl font-black text-foreground">{offeredCount}</div>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Final selections confirmed</p>
           </div>
         </div>
 
         {/* Filter and Search Bar */}
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+        <div className="bg-card p-3.5 rounded-xl border border-border shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Filter by company name or job role..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full pl-9 pr-3 py-2 text-xs rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-slate-500 text-[11px] font-medium hidden sm:inline">Status:</span>
+            <span className="text-muted-foreground text-[11px] font-medium hidden sm:inline">Status:</span>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 font-medium text-slate-700"
+              className="px-3 py-1.5 text-xs rounded-lg border border-border bg-secondary font-medium text-foreground cursor-pointer"
             >
               <option value="ALL">All Application Statuses</option>
               <option value="APPLIED">Applied</option>
@@ -244,12 +241,12 @@ export function Applications() {
         {loading ? (
           <LoadingSpinner text="Retrieving candidate application tracking..." />
         ) : filteredApplications.length === 0 ? (
-          <div className="bg-white p-12 text-center rounded-2xl border border-slate-200 space-y-3">
-            <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto border border-blue-200">
+          <div className="bg-white p-12 text-center rounded-2xl border border-border space-y-3">
+            <div className="w-14 h-14 rounded-2xl bg-secondary text-foreground flex items-center justify-center mx-auto border border-border">
               <FileCheck2 className="w-7 h-7" />
             </div>
-            <h3 className="font-bold text-slate-900 text-base">No Applications Found</h3>
-            <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+            <h3 className="font-bold text-foreground text-base">No Applications Found</h3>
+            <p className="text-xs text-muted-foreground max-w-md mx-auto leading-relaxed">
               {searchTerm || statusFilter !== 'ALL'
                 ? 'No applications match your selected filter criteria. Try clearing search filters.'
                 : 'You have not submitted applications to any corporate placement drives yet. Browse open drives to begin your campus placement journey.'}
@@ -257,7 +254,7 @@ export function Applications() {
             <div className="pt-2">
               <Link
                 to="/companies"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#171717] hover:bg-[#262626] text-[#fafafa] dark:bg-[#fafafa] dark:hover:bg-[#e5e5e5] dark:text-[#0a0a0a] rounded-xl text-xs font-bold shadow-xs transition-colors"
               >
                 Explore Eligible Companies <ChevronRight className="w-4 h-4" />
               </Link>
@@ -276,26 +273,26 @@ export function Applications() {
               return (
                 <div
                   key={app.id}
-                  className="bg-white rounded-2xl border border-slate-200/90 hover:border-blue-300 shadow-2xs hover:shadow-md transition-all overflow-hidden"
+                  className="bg-card rounded-2xl border border-border hover:border-neutral-400 dark:hover:border-neutral-600 shadow-xs transition-all overflow-hidden"
                 >
                   {/* Card Header */}
-                  <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-slate-50/70 to-white">
+                  <div className="p-5 border-b border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-secondary text-foreground">
                     <div className="flex items-center gap-3.5">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-900 to-indigo-950 text-white font-black text-xl flex items-center justify-center shadow-xs">
-                        {app.company_name ? app.company_name[0] : 'C'}
+                      <div className="w-12 h-12 rounded-xl bg-primary text-primary-foreground font-black text-xl flex items-center justify-center shadow-xs">
+                        {app.company_name ? app.company_name[0].toUpperCase() : 'C'}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-base text-slate-900">{app.company_name}</h3>
+                          <h3 className="font-bold text-base text-foreground">{app.company_name}</h3>
                           <StatusBadge status={app.company_tier || 'REGULAR'} />
                           {app.ctc_lpa && (
-                            <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                            <span className="text-xs font-black text-foreground bg-card px-2.5 py-0.5 rounded border border-border">
                               ₹{app.ctc_lpa} LPA
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-slate-500 font-medium mt-0.5">
-                          Role: <strong className="text-slate-800">{app.job_title}</strong>
+                        <p className="text-xs text-muted-foreground font-medium mt-0.5">
+                          Role: <strong className="text-foreground">{app.job_title}</strong>
                           {app.locations ? ` • ${app.locations}` : ''}
                         </p>
                       </div>
@@ -304,18 +301,18 @@ export function Applications() {
                     {/* Metadata & Status Badges */}
                     <div className="flex flex-wrap items-center gap-2">
                       <div className="text-right hidden sm:block mr-2">
-                        <span className="text-[10px] text-slate-400 uppercase font-bold block">Application ID</span>
-                        <span className="text-xs font-mono font-bold text-slate-800">#APPL-{app.id}</span>
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold block">Application ID</span>
+                        <span className="text-xs font-mono font-bold text-foreground">#APPL-{app.id}</span>
                       </div>
 
                       {/* Eligibility Badge */}
                       <span
                         className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${
                           app.eligibility_status === 'ELIGIBLE'
-                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                            ? 'bg-secondary text-foreground border-border'
                             : app.eligibility_status === 'INELIGIBLE'
-                            ? 'bg-rose-50 text-rose-800 border-rose-200'
-                            : 'bg-amber-50 text-amber-800 border-amber-200'
+                            ? 'bg-secondary text-foreground border-border'
+                            : 'bg-secondary text-foreground border-border'
                         }`}
                       >
                         {app.eligibility_status === 'ELIGIBLE' && '✓ Eligibility Verified'}
@@ -332,10 +329,10 @@ export function Applications() {
                         <span
                           className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider ${
                             app.final_result === 'SELECTED'
-                              ? 'bg-emerald-600 text-white'
+                              ? 'bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] text-white'
                               : app.final_result === 'WAITLISTED'
-                              ? 'bg-amber-600 text-white'
-                              : 'bg-rose-600 text-white'
+                              ? 'bg-primary text-primary-foreground'
+                              : 'bg-primary text-primary-foreground'
                           }`}
                         >
                           {app.final_result === 'SELECTED' && '🎉 SELECTED'}
@@ -350,11 +347,11 @@ export function Applications() {
                   <div className="p-5 space-y-4">
                     <div>
                       <div className="flex items-center justify-between text-xs mb-3">
-                        <span className="font-bold text-slate-800 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                          <Clock className="w-4 h-4 text-blue-600" /> Multi-Round Selection Timeline
+                        <span className="font-bold text-foreground uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                          <Clock className="w-4 h-4 text-foreground" /> Multi-Round Selection Timeline
                         </span>
-                        <span className="text-slate-500 font-medium">
-                          Current Stage: <strong className="text-blue-700">{app.current_round_name || `Round ${currentRoundNum}`}</strong>
+                        <span className="text-muted-foreground font-medium">
+                          Current Stage: <strong className="text-foreground">{app.current_round_name || `Round ${currentRoundNum}`}</strong>
                         </span>
                       </div>
 
@@ -363,30 +360,30 @@ export function Applications() {
                         <div className="flex items-center min-w-[620px] text-xs">
                           {/* Step 1: Applied */}
                           <div className="flex-1 flex flex-col items-center text-center relative group">
-                            <div className="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-xs z-10">
+                            <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs shadow-xs z-10">
                               ✓
                             </div>
-                            <span className="font-bold text-slate-800 text-[11px] mt-2">Applied</span>
-                            <span className="text-[10px] text-slate-400">
+                            <span className="font-bold text-foreground text-[11px] mt-2">Applied</span>
+                            <span className="text-[10px] text-muted-foreground">
                               {app.applied_at ? app.applied_at.split('T')[0] : 'Confirmed'}
                             </span>
                           </div>
 
-                          <div className="h-0.5 flex-1 bg-emerald-500 -mt-7" />
+                          <div className="h-0.5 flex-1 bg-primary -mt-7" />
 
                           {/* Step 2: Eligibility Verified */}
                           <div className="flex-1 flex flex-col items-center text-center relative group">
                             <div
                               className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-xs z-10 ${
                                 app.eligibility_status === 'INELIGIBLE'
-                                  ? 'bg-rose-600 text-white'
-                                  : 'bg-emerald-600 text-white'
+                                  ? 'bg-secondary text-foreground border border-border'
+                                  : 'bg-primary text-primary-foreground'
                               }`}
                             >
                               {app.eligibility_status === 'INELIGIBLE' ? '✕' : '✓'}
                             </div>
-                            <span className="font-bold text-slate-800 text-[11px] mt-2">Eligibility</span>
-                            <span className="text-[10px] text-slate-400">
+                            <span className="font-bold text-foreground text-[11px] mt-2">Eligibility</span>
+                            <span className="text-[10px] text-muted-foreground">
                               {app.eligibility_status === 'INELIGIBLE' ? 'Flagged' : 'Verified'}
                             </span>
                           </div>
@@ -394,8 +391,8 @@ export function Applications() {
                           <div
                             className={`h-0.5 flex-1 -mt-7 ${
                               ['SHORTLISTED', 'IN_PROCESS', 'OFFERED', 'ACCEPTED'].includes(app.status)
-                                ? 'bg-emerald-500'
-                                : 'bg-slate-200'
+                                ? 'bg-primary'
+                                : 'bg-border'
                             }`}
                           />
 
@@ -412,22 +409,20 @@ export function Applications() {
                                     <div
                                       className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-xs z-10 ${
                                         isPastRound
-                                          ? 'bg-emerald-600 text-white'
+                                          ? 'bg-primary text-primary-foreground'
                                           : isFailedHere
-                                          ? 'bg-rose-600 text-white'
+                                          ? 'bg-secondary text-foreground border border-border'
                                           : isCurrentRound
-                                          ? 'bg-blue-600 text-white ring-4 ring-blue-100 animate-pulse'
-                                          : 'bg-slate-100 text-slate-400 border border-slate-300'
+                                          ? 'bg-primary text-primary-foreground ring-4 ring-neutral-300 dark:ring-neutral-700'
+                                          : 'bg-secondary text-muted-foreground border border-border'
                                       }`}
                                     >
                                       {isPastRound ? '✓' : isFailedHere ? '✕' : rnd.round_number}
                                     </div>
-                                    <span className={`font-bold text-[11px] mt-2 truncate max-w-[110px] ${
-                                      isCurrentRound ? 'text-blue-700' : 'text-slate-800'
-                                    }`}>
+                                    <span className="font-bold text-[11px] mt-2 truncate max-w-[110px] text-foreground">
                                       {rnd.round_name}
                                     </span>
-                                    <span className="text-[10px] text-slate-400">
+                                    <span className="text-[10px] text-muted-foreground">
                                       {isCurrentRound ? 'In Progress' : isPastRound ? 'Cleared' : isFailedHere ? 'Not Cleared' : 'Pending'}
                                     </span>
                                   </div>
@@ -435,7 +430,7 @@ export function Applications() {
                                   {idx < driveRounds.length - 1 && (
                                     <div
                                       className={`h-0.5 flex-1 -mt-7 ${
-                                        currentRoundNum > rnd.round_number || isSelected ? 'bg-emerald-500' : 'bg-slate-200'
+                                        currentRoundNum > rnd.round_number || isSelected ? 'bg-primary' : 'bg-border'
                                       }`}
                                     />
                                   )}
@@ -446,26 +441,26 @@ export function Applications() {
                             // Default Fallback Stages if rounds empty
                             <>
                               <div className="flex-1 flex flex-col items-center text-center relative group">
-                                <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-xs z-10">
+                                <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-xs shadow-xs z-10">
                                   1
                                 </div>
-                                <span className="font-bold text-slate-800 text-[11px] mt-2">Assessment</span>
-                                <span className="text-[10px] text-slate-400">In Progress</span>
+                                <span className="font-bold text-foreground text-[11px] mt-2">Assessment</span>
+                                <span className="text-[10px] text-muted-foreground">In Progress</span>
                               </div>
-                              <div className="h-0.5 flex-1 bg-slate-200 -mt-7" />
+                              <div className="h-0.5 flex-1 bg-border -mt-7" />
                               <div className="flex-1 flex flex-col items-center text-center relative group">
-                                <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-400 border border-slate-300 flex items-center justify-center font-bold text-xs shadow-xs z-10">
+                                <div className="w-8 h-8 rounded-full bg-secondary text-muted-foreground border border-border flex items-center justify-center font-bold text-xs shadow-xs z-10">
                                   2
                                 </div>
-                                <span className="font-bold text-slate-800 text-[11px] mt-2">Interview</span>
-                                <span className="text-[10px] text-slate-400">Upcoming</span>
+                                <span className="font-bold text-foreground text-[11px] mt-2">Interview</span>
+                                <span className="text-[10px] text-muted-foreground">Upcoming</span>
                               </div>
                             </>
                           )}
 
                           <div
                             className={`h-0.5 flex-1 -mt-7 ${
-                              isSelected ? 'bg-emerald-500' : isRejected ? 'bg-rose-400' : 'bg-slate-200'
+                              isSelected ? 'bg-primary' : isRejected ? 'bg-secondary' : 'bg-border'
                             }`}
                           />
 
@@ -474,18 +469,18 @@ export function Applications() {
                             <div
                               className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-xs z-10 ${
                                 isSelected
-                                  ? 'bg-emerald-600 text-white ring-4 ring-emerald-100'
+                                  ? 'bg-primary text-primary-foreground ring-4 ring-neutral-300 dark:ring-neutral-700'
                                   : isRejected
-                                  ? 'bg-rose-600 text-white'
+                                  ? 'bg-secondary text-foreground border border-border'
                                   : isWithdrawn
-                                  ? 'bg-slate-400 text-white'
-                                  : 'bg-slate-100 text-slate-400 border border-slate-300'
+                                  ? 'bg-secondary text-muted-foreground border border-border'
+                                  : 'bg-secondary text-muted-foreground border border-border'
                               }`}
                             >
                               {isSelected ? '★' : isRejected ? '✕' : isWithdrawn ? '—' : '🏆'}
                             </div>
-                            <span className="font-bold text-slate-800 text-[11px] mt-2">Final Outcome</span>
-                            <span className="text-[10px] text-slate-400">
+                            <span className="font-bold text-foreground text-[11px] mt-2">Final Outcome</span>
+                            <span className="text-[10px] text-muted-foreground">
                               {isSelected
                                 ? 'Selected!'
                                 : isRejected
@@ -501,22 +496,22 @@ export function Applications() {
 
                     {/* Interview / Assessment Schedule Alert (if scheduled) */}
                     {app.interview_scheduled_at && (
-                      <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                      <div className="rounded-xl border border-border bg-secondary p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
                         <div className="flex items-start gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                          <div className="w-9 h-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shrink-0 shadow-xs">
                             <CalendarDays className="w-5 h-5" />
                           </div>
                           <div>
-                            <span className="font-bold text-blue-900 block text-xs">
+                            <span className="font-bold text-foreground block text-xs">
                               Upcoming Interview / Assessment Slot Confirmed
                             </span>
-                            <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-600 mt-0.5">
+                            <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground mt-0.5">
                               <span>
-                                Date & Time: <strong className="text-slate-800">{new Date(app.interview_scheduled_at).toLocaleString()}</strong>
+                                Date & Time: <strong className="text-foreground">{new Date(app.interview_scheduled_at).toLocaleString()}</strong>
                               </span>
                               {app.interview_venue_or_link && (
                                 <span>
-                                  Venue / Meet: <strong className="text-slate-800">{app.interview_venue_or_link}</strong>
+                                  Venue / Meet: <strong className="text-foreground">{app.interview_venue_or_link}</strong>
                                 </span>
                               )}
                             </div>
@@ -526,7 +521,7 @@ export function Applications() {
                         {app.interview_venue_or_link && (app.interview_venue_or_link.includes('http') || app.interview_venue_or_link.includes('room')) && (
                           <Link
                             to="/videocall/interview"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs shadow-xs"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground hover:opacity-90 font-bold rounded-lg text-xs shadow-xs transition-opacity"
                           >
                             <Video className="w-3.5 h-3.5" /> Join Room
                           </Link>
@@ -536,30 +531,30 @@ export function Applications() {
 
                     {/* Officer Feedback Banner (if released) */}
                     {app.feedback && (
-                      <div className="rounded-xl border border-purple-200 bg-purple-50/70 p-3 text-xs text-purple-900 space-y-1">
+                      <div className="rounded-xl border border-border bg-secondary p-3 text-xs text-foreground space-y-1">
                         <span className="font-bold text-[11px] flex items-center gap-1">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-600" /> Evaluation Remarks & Feedback:
+                          <Sparkles className="w-3.5 h-3.5 text-foreground" /> Evaluation Remarks & Feedback:
                         </span>
-                        <p className="text-[11px] text-purple-800 italic">{app.feedback}</p>
+                        <p className="text-[11px] text-foreground italic">{app.feedback}</p>
                       </div>
                     )}
 
                     {/* Announcements for this company */}
                     {announcements.length > 0 && (
-                      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 space-y-2 text-xs">
-                        <span className="font-bold text-slate-700 text-[11px] flex items-center gap-1.5">
-                          <Bell className="w-3.5 h-3.5 text-blue-600" /> Recruitment Announcements ({announcements.length})
+                      <div className="rounded-xl border border-border bg-secondary p-3 space-y-2 text-xs">
+                        <span className="font-bold text-foreground text-[11px] flex items-center gap-1.5">
+                          <Bell className="w-3.5 h-3.5 text-foreground" /> Recruitment Announcements ({announcements.length})
                         </span>
                         <div className="space-y-1.5">
                           {announcements.slice(0, 2).map((ann) => (
-                            <div key={ann.id} className="p-2.5 rounded-lg bg-white border border-slate-200/80 text-[11px] space-y-0.5">
-                              <div className="flex items-center justify-between font-bold text-slate-800">
+                            <div key={ann.id} className="p-2.5 rounded-lg bg-card border border-border text-[11px] space-y-0.5">
+                              <div className="flex items-center justify-between font-bold text-foreground">
                                 <span>{ann.title}</span>
-                                <span className="text-[10px] text-slate-400 font-normal">
+                                <span className="text-[10px] text-muted-foreground font-normal">
                                   {ann.created_at ? ann.created_at.split('T')[0] : 'Recent'}
                                 </span>
                               </div>
-                              <p className="text-slate-600 text-[11px]">{ann.content}</p>
+                              <p className="text-muted-foreground text-[11px]">{ann.content}</p>
                             </div>
                           ))}
                         </div>
@@ -568,21 +563,21 @@ export function Applications() {
                   </div>
 
                   {/* Card Footer Actions */}
-                  <div className="px-5 py-3.5 bg-slate-50/90 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
-                    <div className="flex items-center gap-3 text-slate-500 text-[11px]">
+                  <div className="px-5 py-3.5 bg-secondary border-t border-border flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-3 text-muted-foreground text-[11px]">
                       <span>
-                        Drive Date: <strong className="text-slate-800">{app.drive_date?.split('T')[0] || 'TBD'}</strong>
+                        Drive Date: <strong className="text-foreground">{app.drive_date?.split('T')[0] || 'TBD'}</strong>
                       </span>
                       <span>•</span>
                       <span>
-                        Venue: <strong className="text-slate-800">{app.drive_venue || 'Campus Placement Cell'}</strong>
+                        Venue: <strong className="text-foreground">{app.drive_venue || 'Campus Placement Cell'}</strong>
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <Link
                         to="/companies"
-                        className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-semibold rounded-lg border border-slate-200 text-xs transition-colors"
+                        className="px-3 py-1.5 bg-card hover:bg-neutral-200 dark:hover:bg-neutral-800 text-foreground font-semibold rounded-lg border border-border text-xs transition-colors"
                       >
                         Company Info
                       </Link>
@@ -592,14 +587,14 @@ export function Applications() {
                         <button
                           onClick={() => handleWithdrawApplication(app.id, app.company_name)}
                           disabled={withdrawingId === app.id}
-                          className="px-3 py-1.5 text-rose-600 hover:bg-rose-50 border border-rose-200 font-semibold rounded-lg text-xs transition-colors cursor-pointer disabled:opacity-50"
+                          className="px-3 py-1.5 text-foreground hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-border font-semibold rounded-lg text-xs transition-colors cursor-pointer disabled:opacity-50"
                         >
                           {withdrawingId === app.id ? 'Withdrawing...' : 'Withdraw Application'}
                         </button>
                       )}
 
                       {isWithdrawn && (
-                        <span className="px-3 py-1.5 bg-slate-200 text-slate-600 font-bold rounded-lg text-xs">
+                        <span className="px-3 py-1.5 bg-secondary text-muted-foreground font-bold rounded-lg text-xs border border-border">
                           Withdrawn
                         </span>
                       )}
@@ -621,29 +616,29 @@ export function Applications() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">Recruitment Applications Pipeline</h1>
-          <p className="text-xs text-slate-500">Track candidate progression from initial apply through shortlisting, interviews, and final offers.</p>
+          <h1 className="text-xl font-bold text-foreground">Recruitment Applications Pipeline</h1>
+          <p className="text-xs text-muted-foreground">Track candidate progression from initial apply through shortlisting, interviews, and final offers.</p>
         </div>
       </div>
 
       {/* Filter Row */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap gap-3 items-center justify-between">
+      <div className="bg-white p-4 rounded-xl border border-border shadow-xs flex flex-wrap gap-3 items-center justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative min-w-[200px]">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search candidate or company..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 font-medium text-slate-700"
+              className="pl-8 pr-3 py-1.5 text-xs rounded-lg border border-border bg-secondary font-medium text-foreground"
             />
           </div>
 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 font-medium text-slate-700"
+            className="px-3 py-1.5 text-xs rounded-lg border border-border bg-secondary font-medium text-foreground"
           >
             <option value="ALL">All Application Statuses</option>
             <option value="APPLIED">Applied</option>
@@ -658,7 +653,7 @@ export function Applications() {
             <select
               value={departmentFilter}
               onChange={(e) => setDepartmentFilter(e.target.value)}
-              className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 font-medium text-slate-700"
+              className="px-3 py-1.5 text-xs rounded-lg border border-border bg-secondary font-medium text-foreground"
             >
               <option value="ALL">All Departments</option>
               <option value="CSE">CSE</option>
@@ -671,19 +666,19 @@ export function Applications() {
           )}
         </div>
 
-        <span className="text-xs text-slate-500 font-semibold">Showing {filteredApplications.length} candidates</span>
+        <span className="text-xs text-muted-foreground font-semibold">Showing {filteredApplications.length} candidates</span>
       </div>
 
       {/* Applications Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-xl border border-border shadow-xs overflow-hidden">
         {loading ? (
           <LoadingSpinner text="Loading candidate pipeline..." />
         ) : filteredApplications.length === 0 ? (
-          <div className="py-12 text-center text-xs text-slate-400">No applications match the current filter.</div>
+          <div className="py-12 text-center text-xs text-muted-foreground">No applications match the current filter.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-600">
-              <thead className="bg-slate-50 font-semibold border-b border-slate-200">
+            <table className="w-full text-left text-xs text-muted-foreground">
+              <thead className="bg-secondary font-semibold border-b border-border">
                 <tr>
                   <th className="py-3 px-4">Student</th>
                   <th className="py-3 px-4">Dept & CGPA</th>
@@ -698,32 +693,32 @@ export function Applications() {
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredApplications.map((app) => (
-                  <tr key={app.id} className="hover:bg-slate-50/80 transition-colors">
+                  <tr key={app.id} className="hover:bg-secondary transition-colors">
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-slate-900">{app.first_name} {app.last_name}</div>
-                      <div className="text-[11px] font-mono text-slate-400">{app.register_number}</div>
+                      <div className="font-semibold text-foreground">{app.first_name} {app.last_name}</div>
+                      <div className="text-[11px] font-mono text-muted-foreground">{app.register_number}</div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-medium text-slate-800">{app.department_code}</div>
-                      <div className="text-[11px] text-blue-600 font-bold">CGPA: {app.cgpa}</div>
+                      <div className="font-medium text-foreground">{app.department_code}</div>
+                      <div className="text-[11px] text-foreground font-bold">CGPA: {app.cgpa}</div>
                     </td>
                     <td className="py-3 px-4">
-                      <div className="font-semibold text-slate-800">{app.company_name}</div>
-                      <div className="text-[11px] text-slate-500">{app.job_title} (₹{app.ctc_lpa} LPA)</div>
+                      <div className="font-semibold text-foreground">{app.company_name}</div>
+                      <div className="text-[11px] text-muted-foreground">{app.job_title} (₹{app.ctc_lpa} LPA)</div>
                     </td>
                     <td className="py-3 px-4">
                       <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${
                         app.eligibility_status === 'ELIGIBLE'
-                          ? 'bg-emerald-100 text-emerald-800'
+                          ? 'bg-secondary text-foreground'
                           : app.eligibility_status === 'INELIGIBLE'
-                          ? 'bg-rose-100 text-rose-800'
-                          : 'bg-amber-100 text-amber-800'
+                          ? 'bg-secondary text-foreground'
+                          : 'bg-secondary text-foreground'
                       }`}>
                         {app.eligibility_status || 'ELIGIBLE'}
                       </span>
                     </td>
                     <td className="py-3 px-4">
-                      <span className="px-2 py-0.5 rounded bg-slate-100 font-medium">Round {app.current_round_number}</span>
+                      <span className="px-2 py-0.5 rounded bg-secondary font-medium">Round {app.current_round_number}</span>
                     </td>
                     <td className="py-3 px-4">
                       <StatusBadge status={app.status} />
@@ -736,7 +731,7 @@ export function Applications() {
                           {app.status === 'APPLIED' && (
                             <button
                               onClick={() => handleUpdateStatus(app.id, 'SHORTLISTED', 2)}
-                              className="px-2.5 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold text-[11px] cursor-pointer"
+                              className="px-2.5 py-1 rounded bg-secondary text-foreground hover:bg-secondary font-semibold text-[11px] cursor-pointer"
                             >
                               Shortlist
                             </button>
@@ -744,7 +739,7 @@ export function Applications() {
                           {app.status === 'SHORTLISTED' && (
                             <button
                               onClick={() => handleUpdateStatus(app.id, 'IN_PROCESS', 3)}
-                              className="px-2.5 py-1 rounded bg-amber-50 text-amber-700 hover:bg-amber-100 font-semibold text-[11px] cursor-pointer"
+                              className="px-2.5 py-1 rounded bg-secondary text-foreground hover:bg-secondary font-semibold text-[11px] cursor-pointer"
                             >
                               Advance
                             </button>
@@ -756,7 +751,7 @@ export function Applications() {
                                 setOfferCtc(app.ctc_lpa || '12.0');
                                 setOfferModalOpen(true);
                               }}
-                              className="px-2.5 py-1 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-semibold text-[11px] cursor-pointer flex items-center gap-1"
+                              className="px-2.5 py-1 rounded bg-secondary text-foreground hover:bg-secondary font-semibold text-[11px] cursor-pointer flex items-center gap-1"
                             >
                               <Award className="w-3 h-3" /> Offer
                             </button>
@@ -764,7 +759,7 @@ export function Applications() {
                           {app.status !== 'REJECTED' && app.status !== 'OFFERED' && app.status !== 'ACCEPTED' && (
                             <button
                               onClick={() => handleUpdateStatus(app.id, 'REJECTED')}
-                              className="px-2 py-1 rounded text-rose-600 hover:bg-rose-50 text-[11px] cursor-pointer"
+                              className="px-2 py-1 rounded text-foreground hover:bg-secondary border border-border text-[11px] cursor-pointer"
                             >
                               Reject
                             </button>
@@ -784,28 +779,28 @@ export function Applications() {
       <Modal isOpen={offerModalOpen} onClose={() => setOfferModalOpen(false)} title={`Issue Placement Offer to ${selectedApp?.first_name} ${selectedApp?.last_name}`}>
         <form onSubmit={handleReleaseOffer} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Company</label>
-            <input type="text" readOnly value={selectedApp?.company_name || ''} className="w-full p-2 border bg-slate-50 rounded" />
+            <label className="block font-semibold text-foreground mb-1">Company</label>
+            <input type="text" readOnly value={selectedApp?.company_name || ''} className="w-full p-2 border bg-secondary rounded" />
           </div>
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Role</label>
-            <input type="text" readOnly value={selectedApp?.job_title || ''} className="w-full p-2 border bg-slate-50 rounded" />
+            <label className="block font-semibold text-foreground mb-1">Role</label>
+            <input type="text" readOnly value={selectedApp?.job_title || ''} className="w-full p-2 border bg-secondary rounded" />
           </div>
           <div>
-            <label className="block font-semibold text-slate-700 mb-1">Offered CTC Package (LPA)</label>
+            <label className="block font-semibold text-foreground mb-1">Offered CTC Package (LPA)</label>
             <input
               type="number"
               step="0.1"
               required
               value={offerCtc}
               onChange={(e) => setOfferCtc(e.target.value)}
-              className="w-full p-2 border border-slate-200 rounded font-bold text-emerald-600 text-sm"
+              className="w-full p-2 border border-border rounded font-bold text-foreground text-sm"
             />
           </div>
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
-            <button type="button" onClick={() => setOfferModalOpen(false)} className="px-4 py-2 border rounded text-slate-600">Cancel</button>
-            <button type="submit" className="px-4 py-2 bg-emerald-600 text-white font-bold rounded hover:bg-emerald-700">Release Offer Letter</button>
+          <div className="flex justify-end gap-2 pt-2 border-t border-border">
+            <button type="button" onClick={() => setOfferModalOpen(false)} className="px-4 py-2 border rounded text-muted-foreground">Cancel</button>
+            <button type="submit" className="px-4 py-2 bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a] text-white font-bold rounded hover:bg-[#171717] text-[#fafafa] dark:bg-[#fafafa] dark:text-[#0a0a0a]">Release Offer Letter</button>
           </div>
         </form>
       </Modal>

@@ -750,7 +750,7 @@ const ExamScreen = ({
     (q?.subject || '').toLowerCase().includes('iot');
   const { text: qText, code: qCode, language: qLang } = extractCodeFromQuestion(q?.question || '');
 
-  const watermarkTextStr = `UNISERVE PROCTORED EXAM • ${user?.roll_number || 'STUDENT'} • ${user?.name || 'CANDIDATE'} • CONFIDENTIAL`;
+  const watermarkTextStr = `CAMPUSSCORP PROCTORED EXAM • ${user?.roll_number || 'STUDENT'} • ${user?.name || 'CANDIDATE'} • CONFIDENTIAL`;
 
   return (
     <div style={styles.examContainer}>
@@ -880,9 +880,9 @@ const ExamScreen = ({
               <span>← Exit Exam</span>
             </button>
           )}
-          <img src="/logo.jpeg" alt="Uniserve Logo" style={{ ...styles.logo, background: '#fff', objectFit: 'contain', padding: '2px', borderRadius: '8px' }} />
+          <img src="/logo-light.jpeg" alt="CampusCorp Logo" style={{ ...styles.logo, background: '#fff', objectFit: 'contain', padding: '2px', borderRadius: '8px' }} />
           <div>
-            <p style={{ color: '#0f172a', fontWeight: 800, fontSize: '0.9rem' }}>UNISERVE CodeSprint LMS</p>
+            <p style={{ color: '#0f172a', fontWeight: 800, fontSize: '0.9rem' }}>CAMPUSSCORP CodeSprint LMS</p>
             <p style={{ color: '#64748b', fontSize: '0.72rem' }}>{user?.name} • {user?.department}</p>
           </div>
         </div>

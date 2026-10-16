@@ -24,10 +24,12 @@ import {
   Square,
   Users,
   Search,
+  Sun,
+  Moon,
 } from 'lucide-react';
 
 export function Settings() {
-  const { currentTheme, setTheme, themes } = useTheme();
+  const { currentTheme, setTheme, themes, isDark, setDarkMode } = useTheme();
   const { user, switchRole } = useAuth();
   const {
     allPages,
@@ -86,7 +88,7 @@ export function Settings() {
   return (
     <div className="space-y-6 pb-12 font-sans">
       {/* Top Banner / Header */}
-      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs relative overflow-hidden">
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-xs relative overflow-hidden">
         <div
           className="absolute -top-24 -right-24 w-72 h-72 rounded-full blur-3xl opacity-20 pointer-events-none"
           style={{ background: currentTheme.glow }}
@@ -105,35 +107,35 @@ export function Settings() {
                 Institutional Administration & Settings
               </span>
               {isSuperAdmin && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[10px] font-extrabold border border-amber-300">
-                  <ShieldAlert className="w-3 h-3 text-amber-500" />
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-secondary text-foreground text-[10px] font-extrabold border border-border">
+                  <ShieldAlert className="w-3 h-3 text-foreground" />
                   SUPER ADMIN CONSOLE
                 </span>
               )}
               {savedNotice && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200 animate-fade-in">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary text-foreground text-[10px] font-bold border border-border animate-fade-in">
                   <Check className="w-3 h-3" />
                   Live Sync Active!
                 </span>
               )}
               {backendSynced && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary text-foreground text-[10px] font-bold border border-border">
                   <Database className="w-3 h-3" />
                   MySQL Backend Connected
                 </span>
               )}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Uniserve Settings & Access Control
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              CampusCorp Settings & Access Control
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-              Configure role-based page visibility checkboxes, switch visual themes, and manage institutional preferences.
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-2xl">
+              Configure role-based page visibility checkboxes, switch visual themes, toggle dark/light mode, and manage institutional preferences.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-right">
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+            <div className="px-3.5 py-2 rounded-xl bg-secondary border border-border text-right">
+              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block">
                 Active Role
               </span>
               <span
@@ -147,13 +149,13 @@ export function Settings() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-2 mt-6 pt-5 border-t border-slate-100 text-xs overflow-x-auto">
+        <div className="flex items-center gap-2 mt-6 pt-5 border-t border-border text-xs overflow-x-auto">
           <button
             onClick={() => setActiveTab('permissions')}
             className={`px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
               activeTab === 'permissions'
                 ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
@@ -164,7 +166,7 @@ export function Settings() {
             className={`px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
               activeTab === 'appearance'
                 ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
             }`}
           >
             <Palette className="w-3.5 h-3.5" />
@@ -175,7 +177,7 @@ export function Settings() {
             className={`px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
               activeTab === 'preferences'
                 ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
             }`}
           >
             <Sliders className="w-3.5 h-3.5" />
@@ -186,7 +188,7 @@ export function Settings() {
             className={`px-3.5 py-2 rounded-lg font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
               activeTab === 'system'
                 ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
             }`}
           >
             <Database className="w-3.5 h-3.5" />
@@ -201,19 +203,19 @@ export function Settings() {
       {activeTab === 'permissions' && (
         <div className="space-y-6">
           {/* Super Admin Notice Card */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-amber-50/80 border border-amber-200/90 text-amber-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-secondary border border-border text-foreground flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-700 shrink-0">
+              <div className="w-9 h-9 rounded-xl bg-secondary border border-border flex items-center justify-center text-foreground shrink-0">
                 <ShieldAlert className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-xs sm:text-sm font-bold text-amber-950 flex items-center gap-2">
+                <h3 className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-2">
                   <span>Super Admin Page Access Authority</span>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[10px] font-extrabold uppercase">
+                  <span className="px-2 py-0.5 rounded-full bg-secondary text-foreground text-foreground text-[10px] font-extrabold uppercase">
                     Root Unrestricted
                   </span>
                 </h3>
-                <p className="text-[11px] sm:text-xs text-amber-800 mt-0.5 leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-foreground mt-0.5 leading-relaxed">
                   <strong>Super Admin will always have full access to all 20 pages.</strong> For every other user type, <strong>only the ticked checkbox pages below will be shown</strong> in their sidebar navigation and portal routes.
                 </p>
               </div>
@@ -221,7 +223,7 @@ export function Settings() {
             {user?.roleName !== 'SUPER_ADMIN' && (
               <button
                 onClick={() => switchRole('SUPER_ADMIN')}
-                className="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shrink-0 cursor-pointer shadow-xs transition-colors"
+                className="px-3 py-1.5 rounded-xl bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black hover:bg-primary text-primary-foreground font-bold text-xs shrink-0 cursor-pointer shadow-xs transition-colors"
               >
                 Switch to Super Admin
               </button>
@@ -229,12 +231,12 @@ export function Settings() {
           </div>
 
           {/* User Role Selector Pills */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs space-y-3">
+          <div className="bg-white rounded-2xl p-5 border border-border shadow-xs space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+              <span className="text-xs font-bold text-foreground uppercase tracking-wider">
                 Select User Type to Configure Permissions
               </span>
-              <span className="text-[11px] font-semibold text-slate-500">
+              <span className="text-[11px] font-semibold text-muted-foreground">
                 {userRoles.length} Defined Roles
               </span>
             </div>
@@ -255,11 +257,11 @@ export function Settings() {
                     className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer border ${
                       isSelected
                         ? isSuper
-                          ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-xs font-black'
+                          ? 'bg-neutral-800 text-white dark:bg-neutral-200 dark:text-black text-slate-950 border-border shadow-xs font-black'
                           : 'text-white border-transparent shadow-xs'
                         : isSuper
-                        ? 'bg-amber-50/50 text-amber-900 border-amber-200 hover:bg-amber-100/60'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+                        ? 'bg-secondary text-foreground border-border hover:bg-secondary'
+                        : 'bg-secondary text-foreground border-border hover:bg-secondary hover:text-foreground'
                     }`}
                     style={
                       isSelected && !isSuper
@@ -272,9 +274,9 @@ export function Settings() {
                       className={`px-1.5 py-0.5 rounded-md text-[10px] font-bold ${
                         isSelected
                           ? isSuper
-                            ? 'bg-slate-950 text-amber-300'
+                            ? 'bg-slate-950 text-muted-foreground'
                             : 'bg-white/20 text-white'
-                          : 'bg-slate-200 text-slate-600'
+                          : 'bg-slate-200 text-muted-foreground'
                       }`}
                     >
                       {count}/{allPages.length}
@@ -286,15 +288,15 @@ export function Settings() {
           </div>
 
           {/* Role Header & Actions */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-slate-100">
+          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-border shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-border">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base sm:text-lg font-extrabold text-slate-900">
+                  <h3 className="text-base sm:text-lg font-extrabold text-foreground">
                     Permissions for: {currentRoleObj.label}
                   </h3>
                   {selectedRole === 'SUPER_ADMIN' ? (
-                    <span className="px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-extrabold border border-amber-300">
+                    <span className="px-2.5 py-0.5 rounded-md bg-secondary text-foreground text-[10px] font-extrabold border border-border">
                       Locked All On (Root)
                     </span>
                   ) : (
@@ -310,7 +312,7 @@ export function Settings() {
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   {currentRoleObj.desc}
                 </p>
               </div>
@@ -324,9 +326,9 @@ export function Settings() {
                         setAllPermissionsForRole(selectedRole, true);
                         showNotice();
                       }}
-                      className="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                      className="px-3 py-1.5 rounded-lg border border-border hover:border-border bg-secondary hover:bg-secondary text-foreground text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
                     >
-                      <CheckSquare className="w-3.5 h-3.5 text-emerald-600" />
+                      <CheckSquare className="w-3.5 h-3.5 text-foreground" />
                       <span>Tick All</span>
                     </button>
                     <button
@@ -334,9 +336,9 @@ export function Settings() {
                         setAllPermissionsForRole(selectedRole, false);
                         showNotice();
                       }}
-                      className="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                      className="px-3 py-1.5 rounded-lg border border-border hover:border-border bg-secondary hover:bg-secondary text-foreground text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
                     >
-                      <Square className="w-3.5 h-3.5 text-rose-500" />
+                      <Square className="w-3.5 h-3.5 text-foreground" />
                       <span>Untick All</span>
                     </button>
                     <button
@@ -344,9 +346,9 @@ export function Settings() {
                         resetToDefaults();
                         showNotice();
                       }}
-                      className="px-3 py-1.5 rounded-lg border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
+                      className="px-3 py-1.5 rounded-lg border border-border hover:border-border bg-secondary hover:bg-secondary text-foreground text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors"
                     >
-                      <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
+                      <RefreshCw className="w-3.5 h-3.5 text-muted-foreground" />
                       <span>Reset Defaults</span>
                     </button>
                   </>
@@ -367,13 +369,13 @@ export function Settings() {
 
             {/* Filter Search */}
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              <Search className="w-4 h-4 text-muted-foreground absolute left-3.5 top-3" />
               <input
                 type="text"
                 value={pageSearch}
                 onChange={(e) => setPageSearch(e.target.value)}
                 placeholder="Filter pages by name, route (/students), or category..."
-                className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-slate-50/50 hover:bg-white transition-all"
+                className="w-full pl-9 pr-4 py-2 rounded-xl border border-border text-xs font-medium text-foreground placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-neutral-400 bg-secondary hover:bg-white transition-all"
               />
             </div>
 
@@ -391,15 +393,15 @@ export function Settings() {
 
                 return (
                   <div key={category} className="space-y-2">
-                    <div className="flex items-center justify-between pb-1 border-b border-slate-100">
-                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                    <div className="flex items-center justify-between pb-1 border-b border-border">
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                         <span
                           className="w-2 h-2 rounded-full"
                           style={{ backgroundColor: currentTheme.primary }}
                         />
                         <span>{category}</span>
                       </span>
-                      <span className="text-[10px] font-bold text-slate-400">
+                      <span className="text-[10px] font-bold text-muted-foreground">
                         {categoryCheckedCount} / {categoryPages.length} active
                       </span>
                     </div>
@@ -419,8 +421,8 @@ export function Settings() {
                             }}
                             className={`p-3 rounded-xl border flex items-center justify-between gap-3 transition-all cursor-pointer ${
                               isTicked
-                                ? 'bg-slate-50/80 border-slate-300/90 shadow-2xs'
-                                : 'bg-white border-slate-200/70 opacity-60 hover:opacity-100 hover:border-slate-300'
+                                ? 'bg-secondary border-border/90 shadow-2xs'
+                                : 'bg-white border-border opacity-60 hover:opacity-100 hover:border-border'
                             }`}
                           >
                             <div className="flex items-center gap-3 min-w-0">
@@ -435,21 +437,21 @@ export function Settings() {
                                       handleCheckboxToggle(page.path);
                                     }
                                   }}
-                                  className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer disabled:cursor-not-allowed"
+                                  className="w-4 h-4 rounded text-foreground focus:ring-neutral-400 cursor-pointer disabled:cursor-not-allowed"
                                   style={{
                                     accentColor: isLockedSuperAdmin
-                                      ? '#d97706'
-                                      : currentTheme.primary,
+                                      ? '#737373'
+                                      : '#171717',
                                   }}
                                 />
                               </div>
 
                               {/* Page Title & Route */}
                               <div className="min-w-0">
-                                <p className="text-xs font-bold text-slate-800 truncate">
+                                <p className="text-xs font-bold text-foreground truncate">
                                   {page.label}
                                 </p>
-                                <p className="text-[11px] font-mono text-slate-400">
+                                <p className="text-[11px] font-mono text-muted-foreground">
                                   {page.path}
                                 </p>
                               </div>
@@ -458,17 +460,17 @@ export function Settings() {
                             {/* Status Badge */}
                             <div className="shrink-0">
                               {isLockedSuperAdmin ? (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-extrabold border border-amber-300">
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary text-foreground text-[10px] font-extrabold border border-border">
                                   <Lock className="w-2.5 h-2.5" />
                                   <span>Super Admin Full Access</span>
                                 </span>
                               ) : isTicked ? (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary text-foreground text-[10px] font-bold border border-border">
                                   <Check className="w-2.5 h-2.5" />
                                   <span>Ticked & Visible</span>
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px] font-semibold border border-slate-200">
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary text-muted-foreground text-[10px] font-semibold border border-border">
                                   <span>Unticked (Hidden)</span>
                                 </span>
                               )}
@@ -490,16 +492,67 @@ export function Settings() {
       {/* ========================================================================= */}
       {activeTab === 'appearance' && (
         <div className="space-y-6">
+          <div className="bg-card text-card-foreground rounded-2xl p-6 border border-border shadow-sm">
+            <h2 className="text-base font-bold text-foreground flex items-center gap-2 mb-1">
+              <span>Display Theme Mode</span>
+            </h2>
+            <p className="text-xs text-muted-foreground mb-4">
+              Select your preferred appearance mode. Changes update immediately across the entire platform.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div
+                onClick={() => setDarkMode(false)}
+                className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3.5 ${
+                  !isDark
+                    ? 'border-border bg-secondary/80 shadow-xs'
+                    : 'border-border bg-card hover:bg-secondary/40'
+                }`}
+              >
+                <div className="w-10 h-10 rounded-xl bg-white border border-border text-foreground flex items-center justify-center shadow-xs">
+                  <Sun className="w-5 h-5 text-foreground" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-foreground">Light Mode</p>
+                    {!isDark && <Check className="w-4 h-4 text-foreground stroke-[3]" />}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Pure white cards with high contrast neutral surfaces</p>
+                </div>
+              </div>
+
+              <div
+                onClick={() => setDarkMode(true)}
+                className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center gap-3.5 ${
+                  isDark
+                    ? 'border-border bg-secondary/80 shadow-xs'
+                    : 'border-border bg-card hover:bg-secondary/40'
+                }`}
+              >
+                <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 text-white flex items-center justify-center shadow-xs">
+                  <Moon className="w-5 h-5 text-foreground" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs font-bold text-foreground">Dark Mode</p>
+                    {isDark && <Check className="w-4 h-4 text-foreground stroke-[3]" />}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Deep charcoal surfaces (#0a0a0a & #171717) with refined contrast</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <span>Select Your Color Theme</span>
-                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">
-                  {themes.length} Themes Available
+              <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                <span>Accent Color Palette</span>
+                <span className="px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground text-[10px] font-bold border border-border">
+                  {themes.length} Palettes Available
                 </span>
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Click any palette below to instantly recolor Uniserve navigation, buttons, highlights, and cards.
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Click any palette below to instantly recolor CampusCorp navigation, buttons, highlights, and cards.
               </p>
             </div>
           </div>
@@ -514,7 +567,7 @@ export function Settings() {
                   className={`group relative rounded-2xl p-5 border text-left transition-all cursor-pointer hover:shadow-md ${
                     isSelected
                       ? 'bg-white border-2 shadow-sm'
-                      : 'bg-white/90 border-slate-200/90 hover:border-slate-300'
+                      : 'bg-white/90 border-border hover:border-border'
                   }`}
                   style={{
                     borderColor: isSelected ? t.primary : undefined,
@@ -530,7 +583,7 @@ export function Settings() {
                   )}
 
                   <div className="flex items-center justify-between mb-3.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                       {t.category}
                     </span>
                     <div className="flex items-center gap-1.5">
@@ -545,10 +598,10 @@ export function Settings() {
                   </div>
 
                   <div className="mb-2">
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <h3 className="text-base font-bold text-foreground flex items-center gap-2">
                       {t.name}
                     </h3>
-                    <p className="text-[11px] text-slate-500 line-clamp-1">
+                    <p className="text-[11px] text-muted-foreground line-clamp-1">
                       {t.tagline}
                     </p>
                   </div>
@@ -560,9 +613,9 @@ export function Settings() {
                     }}
                   />
 
-                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-2">
+                  <div className="p-3 rounded-xl bg-secondary border border-border space-y-2">
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-500 font-medium">Preview UI:</span>
+                      <span className="text-muted-foreground font-medium">Preview UI:</span>
                       <span
                         className="px-2 py-0.5 rounded-md text-[10px] font-bold"
                         style={{
@@ -605,27 +658,27 @@ export function Settings() {
       {/* TAB 3: PREFERENCES & DENSITY                                              */}
       {/* ========================================================================= */}
       {activeTab === 'preferences' && (
-        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-xs space-y-6">
           <div>
-            <h2 className="text-base font-bold text-slate-900">
+            <h2 className="text-base font-bold text-foreground">
               Workspace & Interface Preferences
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Customize how tables, cards, and system notifications render on your screen.
             </p>
           </div>
 
           <div className="space-y-4 pt-2">
-            <div className="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:bg-slate-50/50 transition-colors">
+            <div className="flex items-center justify-between p-4 rounded-xl border border-border hover:bg-secondary transition-colors">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
+                <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-foreground">
                   <Layers className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-800">
+                  <h4 className="text-xs font-bold text-foreground">
                     Compact Table Density
                   </h4>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Reduces vertical padding across student rosters and application lists.
                   </p>
                 </div>
@@ -634,20 +687,20 @@ export function Settings() {
                 type="checkbox"
                 checked={compactMode}
                 onChange={() => setCompactMode(!compactMode)}
-                className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                className="w-4 h-4 rounded text-foreground focus:ring-neutral-400 cursor-pointer"
               />
             </div>
 
-            <div className="flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:bg-slate-50/50 transition-colors">
+            <div className="flex items-center justify-between p-4 rounded-xl border border-border hover:bg-secondary transition-colors">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-700">
+                <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-foreground">
                   <Bell className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-800">
+                  <h4 className="text-xs font-bold text-foreground">
                     Real-Time Placement Alerts
                   </h4>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-muted-foreground">
                     Receive instant notifications when new corporate drives or assessment slots open.
                   </p>
                 </div>
@@ -656,7 +709,7 @@ export function Settings() {
                 type="checkbox"
                 checked={emailAlerts}
                 onChange={() => setEmailAlerts(!emailAlerts)}
-                className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                className="w-4 h-4 rounded text-foreground focus:ring-neutral-400 cursor-pointer"
               />
             </div>
           </div>
@@ -667,49 +720,49 @@ export function Settings() {
       {/* TAB 4: SYSTEM & ARCHITECTURE                                              */}
       {/* ========================================================================= */}
       {activeTab === 'system' && (
-        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-xs space-y-6">
           <div>
-            <h2 className="text-base font-bold text-slate-900">
-              Uniserve System Diagnostics
+            <h2 className="text-base font-bold text-foreground">
+              CampusCorp System Diagnostics
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Live status of the multi-database cluster and session permissions.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="p-4 rounded-xl border border-border bg-secondary/50 space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Application Core
               </span>
-              <p className="text-xs font-semibold text-slate-800">Uniserve Enterprise Edition</p>
-              <p className="text-[11px] text-slate-500">Version 2.4.0 (Production Stable)</p>
+              <p className="text-xs font-semibold text-foreground">CampusCorp IT Career Hub Edition</p>
+              <p className="text-[11px] text-muted-foreground">Version 2.4.0 (Production Stable)</p>
             </div>
 
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="p-4 rounded-xl border border-border bg-secondary space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Central Database
               </span>
-              <p className="text-xs font-semibold text-slate-800">MySQL / XAMPP Multi-Tenant</p>
-              <p className="text-[11px] text-emerald-600 font-medium">● 6 Department DBs Synchronized</p>
+              <p className="text-xs font-semibold text-foreground">MySQL / XAMPP Multi-Tenant</p>
+              <p className="text-[11px] text-foreground font-medium">● 6 Department DBs Synchronized</p>
             </div>
 
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="p-4 rounded-xl border border-border bg-secondary space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Authenticated User
               </span>
-              <p className="text-xs font-semibold text-slate-800">
+              <p className="text-xs font-semibold text-foreground">
                 {user ? `${user.firstName} ${user.lastName}` : 'Guest User'}
               </p>
-              <p className="text-[11px] text-slate-500">{user?.email || 'N/A'}</p>
+              <p className="text-[11px] text-muted-foreground">{user?.email || 'N/A'}</p>
             </div>
 
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="p-4 rounded-xl border border-border bg-secondary space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Role Authority
               </span>
-              <p className="text-xs font-semibold text-slate-800">{user?.roleName || 'STUDENT'}</p>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-xs font-semibold text-foreground">{user?.roleName || 'STUDENT'}</p>
+              <p className="text-[11px] text-muted-foreground">
                 {user?.roleName === 'SUPER_ADMIN'
                   ? 'Master Root Control (Access to All Pages)'
                   : `Department: ${user?.departmentCode || 'Institutional'}`}
